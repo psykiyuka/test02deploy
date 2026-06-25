@@ -32,9 +32,9 @@ const categories = [
 ]
 
 const banners = [
-  { id: 1, title: '秋季新品', subtitle: '', description: '全场低至5折起', image: '/src/assets/banner1.webp' },
+  { id: 1, title: '秋季新品', subtitle: '', description: '全场低至5折起', image: '/src/assets/banner1.png' },
   { id: 2, title: '数码狂欢', subtitle: '科技盛宴', description: '新品首发特惠', image: '/src/assets/banner2.jpg' },
-  { id: 3, title: '时尚穿搭', subtitle: '潮流前线', description: '打造你的专属风格', image: '/src/assets/banner3.webp' },
+  { id: 3, title: '时尚穿搭', subtitle: '潮流前线', description: '打造你的专属风格', image: '/src/assets/banner3.png' },
 ]
 
 async function fetchHotProducts() {
