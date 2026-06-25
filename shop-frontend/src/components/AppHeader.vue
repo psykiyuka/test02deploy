@@ -397,6 +397,61 @@ onUnmounted(() => {
 }
 .search-enter-btn:hover { background: rgba(212, 169, 106, 0.15); }
 
+/* ── 优雅搜索输入框（模板内实际使用的类名） ── */
+.elegant-input-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+.elegant-input {
+  width: 100%;
+  padding: 9px 40px 9px 38px;
+  border-radius: 18px;
+  background: rgba(253, 247, 237, 0.7);
+  border: 1.5px solid rgba(212, 169, 106, 0.25);
+  outline: none;
+  font-size: 0.875rem;
+  color: var(--charcoal, #332b24);
+  transition: all 0.2s;
+  box-sizing: border-box;
+}
+.elegant-input::placeholder { color: rgba(51, 43, 36, 0.3); }
+.elegant-input:focus {
+  border-color: rgba(212, 169, 106, 0.55);
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(212, 169, 106, 0.1);
+}
+.elegant-input-icon {
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  color: rgba(196, 144, 64, 0.7);
+  pointer-events: none;
+  display: block;
+}
+.elegant-input-icon-right {
+  left: auto;
+  right: 8px;
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(51, 43, 36, 0.3);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  pointer-events: auto;
+  padding: 0;
+  transition: background 0.15s;
+}
+.elegant-input-icon-right:hover { background: rgba(212, 169, 106, 0.15); }
+
 /* ── 右侧操作区 ── */
 .header-actions {
   display: flex;

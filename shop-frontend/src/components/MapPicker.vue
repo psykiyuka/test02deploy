@@ -292,15 +292,15 @@ onMounted(() => {
     <Transition name="modal">
       <div v-if="show" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
         <div class="absolute inset-0 bg-black/50" @click="emit('close')" />
-        <div class="relative bg-white rounded-t-3xl sm:rounded-2xl shadow-2xl w-full sm:w-full max-w-3xl max-h-[90vh] overflow-hidden">
-          <div class="flex items-center justify-between px-6 py-4 border-b">
+        <div class="relative bg-white rounded-t-3xl sm:rounded-2xl shadow-2xl w-full sm:w-full max-w-3xl h-[92vh] sm:h-[90vh] max-h-[92vh] sm:max-h-[90vh] flex flex-col overflow-hidden">
+          <div class="flex items-center justify-between px-6 py-4 border-b flex-shrink-0">
             <h3 class="font-display text-xl">选择收货地址</h3>
             <button class="p-2" @click="emit('close')">
               <X :size="20" />
             </button>
           </div>
 
-          <div class="p-4 border-b bg-gold-50/30">
+          <div class="p-4 border-b bg-gold-50/30 flex-shrink-0">
             <div class="relative">
               <Search class="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5" />
               <input
@@ -315,14 +315,20 @@ onMounted(() => {
               </button>
             </div>
             <div class="mt-3">
-              <button class="w-full py-2.5 px-4 border rounded-xl flex items-center justify-center gap-2" @click="handleLocate">
-                <Navigation :size="16" />
-                <span>获取当前位置</span>
+              <button
+                class="w-full py-2.5 px-4 border-1 border rounded-xl flex items-center justify-center gap-2 bg-white text-gold-800 hover:bg-indigo-600 hover:text-white transition-colors duration-200"
+                @click="handleLocate"
+              >
+                <Navigation
+                  :size="16"
+                  class="text-gold-500 transition-colors duration-200"
+                />
+                <span class="font-medium">获取当前位置</span>
               </button>
             </div>
           </div>
 
-          <div ref="mapContainer" class="h-80 sm:h-[450px] w-full relative bg-gray-100">
+          <div ref="mapContainer" class="h-64 sm:h-[340px] w-full relative bg-gray-100 flex-shrink-0">
             <div v-if="!mapLoaded && !mapError" class="absolute inset-0 flex items-center justify-center">
               <div class="flex flex-col items-center gap-3">
                 <div class="w-12 h-12 border-4 border-gold-400 border-t-transparent rounded-full animate-spin" />
@@ -343,7 +349,7 @@ onMounted(() => {
             </div>
           </div>
 
-          <div class="p-4 border-t">
+          <div class="flex-1 min-h-0 overflow-y-auto p-4">
             <!-- 地图选点结果 -->
             <div v-if="geocodeResult" class="mb-4 p-3 bg-indigo-50 rounded-xl border border-indigo-100">
               <div class="flex items-center gap-2 mb-2">
@@ -366,7 +372,7 @@ onMounted(() => {
             </div>
 
             <!-- 手动输入：折叠为可展开的补充入口 -->
-            <div class="mb-4">
+            <div class="mb-2">
               <button
                 type="button"
                 @click="showManualInput = !showManualInput"
@@ -388,7 +394,9 @@ onMounted(() => {
                 class="w-full mt-2 px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
             </div>
+          </div>
 
+          <div class="p-4 border-t bg-white flex-shrink-0">
             <button
               class="w-full py-3.5 bg-indigo-600 text-white rounded-xl font-semibold hover:bg-indigo-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
               :disabled="!geocodeResult && !manualAddress.trim()"
