@@ -32,9 +32,9 @@ const categories = [
 ]
 
 const banners = [
-  { id: 1, title: '夏季新品', subtitle: '清凉一夏', description: '全场低至5折起', color: 'from-blue-500 to-purple-600' },
-  { id: 2, title: '数码狂欢', subtitle: '科技盛宴', description: '新品首发特惠', color: 'from-orange-500 to-red-600' },
-  { id: 3, title: '时尚穿搭', subtitle: '潮流前线', description: '打造你的专属风格', color: 'from-pink-500 to-rose-600' },
+  { id: 1, title: '秋季新品', subtitle: '', description: '全场低至5折起', image: '/src/assets/banner1.webp' },
+  { id: 2, title: '数码狂欢', subtitle: '科技盛宴', description: '新品首发特惠', image: '/src/assets/banner2.jpg' },
+  { id: 3, title: '时尚穿搭', subtitle: '潮流前线', description: '打造你的专属风格', image: '/src/assets/banner3.webp' },
 ]
 
 async function fetchHotProducts() {
@@ -97,7 +97,8 @@ onMounted(() => {
             index === currentSlide ? 'opacity-100 scale-100' : 'opacity-0 scale-105'
           ]"
         >
-          <div :class="['absolute inset-0 bg-gradient-to-br', banner.color]"></div>
+          <img :src="banner.image" :alt="banner.title" class="absolute inset-0 w-full h-full object-cover" />
+          <div class="absolute inset-0 bg-black/30"></div>
           <div class="relative h-full flex items-center px-8 md:px-16">
             <div class="text-white max-w-lg">
               <p class="text-lg md:text-xl font-medium mb-2">{{ banner.subtitle }}</p>
