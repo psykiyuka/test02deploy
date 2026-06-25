@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LuxShop — 电商平台预览</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body { font-family: 'Noto Sans SC', sans-serif; }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes gentleFloat {
+      0%,100% { transform: translateY(0) rotate(0deg); }
+      33%      { transform: translateY(-6px) rotate(0.5deg); }
+      66%      { transform: translateY(-3px) rotate(-0.5deg); }
+    }
+    @keyframes slideInRight {
+      from { opacity: 0; transform: translateX(16px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(0.7); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+    @keyframes slideCartIn {
+      from { transform: translateX(100%); }
+      to   { transform: translateX(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    @keyframes bounceCart {
+      0%,100% { transform: scale(1); }
+      40%      { transform: scale(1.3); }
+      70%      { transform: scale(0.9); }
+    }
+
+    .anim-fade-in-up   { animation: fadeInUp 0.7s ease-out forwards; }
+    .anim-float        { animation: gentleFloat 5s ease-in-out infinite; }
+    .anim-slide-right  { animation: slideInRight 0.5s 0.3s ease-out both; }
+    .anim-scale-in     { animation: scaleIn 0.25s ease-out forwards; }
+    .anim-cart-in      { animation: slideCartIn 0.38s cubic-bezier(0.32,0.72,0,1) forwards; }
+    .anim-overlay      { animation: fadeIn 0.3s ease forwards; }
+    .anim-bounce-once  { animation: bounceCart 0.4s ease; }
+
+    .scrollbar-hide { -ms-overflow-style:none; scrollbar-width:none; }
+    .scrollbar-hide::-webkit-scrollbar { display:none; }
+    .line-clamp-2 {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body class="bg-[#f8f9fb]">
+
+<!-- ══════════════════ HEADER ══════════════════ -->
+<header id="header" class="fixed top-0 left-0 right-0 z-50 bg-[#111827] transition-all duration-300">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center gap-4 h-16">
+
+      <!-- Logo -->
+      <div class="flex items-center gap-2.5 shrink-0 cursor-pointer" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+        <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-orange-500 to-amber-400 flex items-center justify-center shadow-lg shadow-orange-500/25">
+          <svg class="w-4 h-4 text-white fill-white" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        </div>
+        <span class="text-white font-bold text-lg tracking-tight">Lux<span class="text-orange-400">Shop</span></span>
+      </div>
+
+      <!-- 搜索框 -->
+      <div class="flex-1 max-w-xl mx-auto">
+        <div id="searchWrap" class="relative flex items-center rounded-xl ring-1 ring-white/10 transition-all duration-300">
+          <svg class="absolute left-3 w-4 h-4 text-gray-400 transition-colors duration-200" id="searchIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input
+            id="searchInput"
+            type="text"
+            placeholder="搜索商品、品牌、分类…"
+            class="w-full bg-[#1f2937] focus:bg-[#252f3e] text-white placeholder-gray-500 pl-10 pr-4 py-2.5 rounded-xl text-sm outline-none transition-colors duration-200"
+            oninput="filterProducts(this.value)"
+            onfocus="searchFocus(true)"
+            onblur="searchFocus(false)"
+          />
+        </div>
+      </div>
+
+      <!-- 右侧操作 -->
+      <div class="flex items-center gap-2 shrink-0">
+        <button id="cartBtn" onclick="toggleCart(true)"
+          class="relative p-2.5 rounded-xl text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-200 cursor-pointer">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+          </svg>
+          <span id="cartBadge" class="hidden absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] bg-orange-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center px-1 shadow-lg shadow-orange-500/40 anim-scale-in">
+            0
+          </span>
+        </button>
+        <button class="hidden sm:flex items-center gap-2 p-1.5 rounded-xl hover:bg-white/10 transition-colors duration-200 cursor-pointer">
+          <div class="w-7 h-7 rounded-lg bg-gradient-to-br from-orange-400 to-rose-500 flex items-center justify-center shadow-md">
+            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- 分类 Tab -->
+    <div class="flex items-center gap-1 pb-3 overflow-x-auto scrollbar-hide" id="catTabs">
+      <!-- 动态渲染 -->
+    </div>
+  </div>
+</header>
+
+<div class="h-[100px]"></div>
+
+
+<!-- ══════════════════ HERO ══════════════════ -->
+<section id="heroSection">
+  <!-- Slide 1 -->
+  <div id="slide0" class="hero-slide bg-gradient-to-br from-[#0a0f1e] via-[#111827] to-[#1a2540] min-h-[480px] lg:min-h-[560px] flex items-center relative overflow-hidden">
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+      <div class="absolute -top-32 -right-32 w-[600px] h-[600px] rounded-full" style="background: radial-gradient(circle, #F9731622, transparent 70%)"></div>
+      <div class="absolute -bottom-20 -left-20 w-80 h-80 rounded-full" style="background: radial-gradient(circle, #F9731633, transparent 70%)"></div>
+      <div class="absolute inset-0 opacity-30" style="background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:40px 40px"></div>
+    </div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-16 lg:py-20">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <!-- 文案 -->
+        <div class="space-y-6 anim-fade-in-up">
+          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold" style="border:1px solid #F9731655;color:#F97316;background:#F9731615">
+            <svg class="w-3 h-3" viewBox="0 0 24 24" fill="currentColor"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+            限时特惠 · 全场8折起
+          </div>
+          <h1 class="text-5xl lg:text-6xl font-black text-white leading-tight tracking-tight">
+            不止于快<br><span class="text-orange-400">更在于精</span>
+          </h1>
+          <p class="text-gray-400 text-base lg:text-lg max-w-md leading-relaxed">
+            甄选全球顶级数码好物，每一件都是生活的升华。
+          </p>
+          <div class="flex items-center gap-8">
+            <div v-for="s in ['500+ 精选好物','98% 好评率','50W+ 用户信赖']" class="text-center">
+              <div class="text-xl font-black text-white">500+</div>
+              <div class="text-xs text-gray-500 mt-0.5">精选好物</div>
+            </div>
+            <div class="text-center">
+              <div class="text-xl font-black text-white">98%</div>
+              <div class="text-xs text-gray-500 mt-0.5">好评率</div>
+            </div>
+            <div class="text-center">
+              <div class="text-xl font-black text-white">50W+</div>
+              <div class="text-xs text-gray-500 mt-0.5">用户信赖</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 pt-2">
+            <button onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})"
+              class="group flex items-center gap-2.5 px-7 py-3.5 rounded-2xl font-bold text-white text-base cursor-pointer transition-all duration-300 hover:scale-105 active:scale-95"
+              style="background:linear-gradient(135deg,#F97316,#F97316cc);box-shadow:0 8px 32px #F9731644">
+              立即抢购
+              <svg class="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+            </button>
+            <button class="px-5 py-3.5 rounded-2xl font-semibold text-gray-300 hover:text-white border border-white/10 hover:border-white/20 hover:bg-white/5 transition-all duration-200 cursor-pointer text-sm">了解更多</button>
+          </div>
+        </div>
+        <!-- 图片 -->
+        <div class="flex justify-center anim-float">
+          <div class="relative">
+            <div class="absolute inset-0 rounded-3xl blur-3xl opacity-20 scale-90" style="background:radial-gradient(circle,#F97316,transparent 70%)"></div>
+            <img src="https://placehold.co/700x440/0a0f1e/F97316?text=Premium+Tech" alt="Hero" class="relative w-full max-w-lg rounded-3xl shadow-2xl border border-white/10" />
+            <div class="anim-slide-right absolute -bottom-4 -left-4 bg-[#111827] border border-white/10 rounded-2xl p-3 shadow-xl flex items-center gap-2.5">
+              <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:#F9731625">
+                <svg class="w-4 h-4 text-orange-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+              </div>
+              <div>
+                <div class="text-white text-xs font-bold">本周热销</div>
+                <div class="text-gray-400 text-[11px]">超3000+件已售</div>
+              </div>
+            </div>
+            <div class="absolute -top-4 -right-4 bg-[#111827] border border-white/10 rounded-2xl px-3 py-2 shadow-xl flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-amber-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <span class="text-white text-xs font-bold">4.9</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 轮播指示器 -->
+    <div class="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-2">
+      <button onclick="goSlide(0)" id="dot0" class="w-6 h-2 rounded-full bg-orange-400 transition-all duration-300 cursor-pointer"></button>
+      <button onclick="goSlide(1)" id="dot1" class="w-2 h-2 rounded-full bg-white/30 hover:bg-white/50 transition-all duration-300 cursor-pointer"></button>
+    </div>
+  </div>
+
+  <!-- Slide 2 -->
+  <div id="slide1" class="hero-slide hidden bg-gradient-to-br from-[#0d0d2b] via-[#1a1040] to-[#0f172a] min-h-[480px] lg:min-h-[560px] flex items-center relative overflow-hidden">
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+      <div class="absolute -top-32 -right-32 w-[600px] h-[600px] rounded-full" style="background: radial-gradient(circle, #8B5CF622, transparent 70%)"></div>
+    </div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-16 lg:py-20">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div class="space-y-6 anim-fade-in-up">
+          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold" style="border:1px solid #8B5CF655;color:#8B5CF6;background:#8B5CF615">
+            <svg class="w-3 h-3" viewBox="0 0 24 24" fill="currentColor"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+            新品首发 · 到手即用
+          </div>
+          <h1 class="text-5xl lg:text-6xl font-black text-white leading-tight tracking-tight">
+            科技赋能<br><span style="color:#8B5CF6">智慧生活</span>
+          </h1>
+          <p class="text-gray-400 text-base lg:text-lg max-w-md leading-relaxed">
+            探索前沿科技产品，让每天都充满惊喜与效率。
+          </p>
+          <div class="flex items-center gap-8">
+            <div class="text-center"><div class="text-xl font-black text-white">30+</div><div class="text-xs text-gray-500 mt-0.5">顶级品牌</div></div>
+            <div class="text-center"><div class="text-xl font-black text-white">7×24</div><div class="text-xs text-gray-500 mt-0.5">客服支持</div></div>
+            <div class="text-center"><div class="text-xl font-black text-white">极速</div><div class="text-xs text-gray-500 mt-0.5">发货配送</div></div>
+          </div>
+          <div class="flex items-center gap-3 pt-2">
+            <button onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})"
+              class="flex items-center gap-2.5 px-7 py-3.5 rounded-2xl font-bold text-white text-base cursor-pointer transition-all duration-300 hover:scale-105 active:scale-95"
+              style="background:linear-gradient(135deg,#8B5CF6,#8B5CF6cc);box-shadow:0 8px 32px #8B5CF644">
+              探索新品
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="flex justify-center anim-float">
+          <img src="https://placehold.co/700x440/0d0d2b/8B5CF6?text=Smart+Life" alt="Hero 2" class="w-full max-w-lg rounded-3xl shadow-2xl border border-white/10" />
+        </div>
+      </div>
+    </div>
+    <div class="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-2">
+      <button onclick="goSlide(0)" id="dot0b" class="w-2 h-2 rounded-full bg-white/30 hover:bg-white/50 transition-all duration-300 cursor-pointer"></button>
+      <button onclick="goSlide(1)" id="dot1b" class="w-6 h-2 rounded-full bg-purple-400 transition-all duration-300 cursor-pointer"></button>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════ 服务栏 ══════════════════ -->
+<div class="bg-[#111827] border-t border-white/5">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
+    <div class="grid grid-cols-3 gap-4 lg:gap-8">
+      <div class="flex items-center justify-center lg:justify-start gap-3 py-2">
+        <svg class="w-5 h-5 text-orange-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12H3l9-9 9 9h-2v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
+        <div class="hidden sm:block"><p class="text-white text-sm font-semibold">极速配送</p><p class="text-gray-500 text-xs">次日达</p></div>
+        <span class="sm:hidden text-gray-300 text-xs font-medium">极速配送</span>
+      </div>
+      <div class="flex items-center justify-center lg:justify-start gap-3 py-2">
+        <svg class="w-5 h-5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <div class="hidden sm:block"><p class="text-white text-sm font-semibold">品质保障</p><p class="text-gray-500 text-xs">假一赔三</p></div>
+        <span class="sm:hidden text-gray-300 text-xs font-medium">品质保障</span>
+      </div>
+      <div class="flex items-center justify-center lg:justify-start gap-3 py-2">
+        <svg class="w-5 h-5 text-violet-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+        <div class="hidden sm:block"><p class="text-white text-sm font-semibold">极简退换</p><p class="text-gray-500 text-xs">7日无理由</p></div>
+        <span class="sm:hidden text-gray-300 text-xs font-medium">极简退换</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════ 商品网格 ══════════════════ -->
+<main id="products" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+  <!-- 区块标题 -->
+  <div class="flex items-center justify-between mb-8">
+    <div class="flex items-center gap-3">
+      <div class="w-1 h-8 bg-gradient-to-b from-orange-500 to-amber-400 rounded-full"></div>
+      <div>
+        <h2 class="text-xl lg:text-2xl font-black text-gray-900 tracking-tight" id="sectionTitle">精选好物</h2>
+        <p class="text-gray-400 text-sm mt-0.5" id="productCount">8 件商品</p>
+      </div>
+    </div>
+    <button class="hidden sm:flex items-center gap-1.5 text-sm text-orange-500 font-semibold hover:text-orange-600 transition-colors cursor-pointer group">
+      查看全部
+      <svg class="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
+    </button>
+  </div>
+
+  <!-- 商品网格 -->
+  <div id="productGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-5"></div>
+  <div id="emptyState" class="hidden flex flex-col items-center justify-center py-24 text-center">
+    <div class="w-20 h-20 rounded-2xl bg-gray-100 flex items-center justify-center mb-4 mx-auto">
+      <svg class="w-9 h-9 text-gray-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    </div>
+    <p class="text-gray-800 font-bold text-lg">没有找到相关商品</p>
+    <p class="text-gray-400 text-sm mt-1">换个关键词试试吧</p>
+    <button onclick="resetSearch()" class="mt-4 px-5 py-2 bg-orange-500 text-white rounded-xl text-sm font-semibold hover:bg-orange-600 transition-colors cursor-pointer">重置搜索</button>
+  </div>
+</main>
+
+
+<!-- ══════════════════ 购物车 Drawer ══════════════════ -->
+<div id="cartOverlay" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 anim-overlay" onclick="toggleCart(false)"></div>
+<div id="cartDrawer" class="hidden fixed top-0 right-0 h-full w-full sm:w-[420px] bg-white z-50 flex flex-col shadow-2xl anim-cart-in">
+
+  <!-- Drawer Header -->
+  <div class="flex items-center justify-between px-6 py-5 border-b border-gray-100">
+    <div class="flex items-center gap-2.5">
+      <svg class="w-5 h-5 text-gray-800" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      <h2 class="text-lg font-black text-gray-900">购物车</h2>
+      <span id="cartCountLabel" class="px-2 py-0.5 rounded-full bg-orange-100 text-orange-600 text-xs font-bold hidden">0</span>
+    </div>
+    <button onclick="toggleCart(false)" class="w-8 h-8 rounded-xl bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors cursor-pointer">
+      <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+
+  <!-- 商品列表 -->
+  <div class="flex-1 overflow-y-auto" id="cartBody">
+    <div id="emptyCart" class="flex flex-col items-center justify-center h-full text-center px-6">
+      <div class="w-24 h-24 rounded-3xl bg-gray-50 flex items-center justify-center mb-5 mx-auto">
+        <svg class="w-10 h-10 text-gray-200" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      </div>
+      <p class="text-gray-800 font-bold text-lg">购物车还是空的</p>
+      <p class="text-gray-400 text-sm mt-1.5 mb-6">快去挑选心仪的商品吧</p>
+      <button onclick="toggleCart(false)" class="px-6 py-2.5 bg-[#111827] text-white rounded-xl font-semibold text-sm hover:bg-gray-700 transition-colors cursor-pointer">去逛逛</button>
+    </div>
+    <div id="cartItems" class="hidden px-6 py-4 space-y-4"></div>
+  </div>
+
+  <!-- 结算区 -->
+  <div id="cartFooter" class="hidden px-6 py-5 border-t border-gray-100 bg-white space-y-4">
+    <div class="flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-orange-50 border border-orange-100">
+      <svg class="w-3.5 h-3.5 text-orange-500 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+      <p class="text-orange-600 text-xs">满 299 减 30 · 满 599 减 80</p>
+    </div>
+    <div class="flex items-center justify-between">
+      <span class="text-gray-500 text-sm" id="cartSummary">合计（0 件）</span>
+      <div class="text-right">
+        <span class="text-gray-400 text-xs mr-1">¥</span>
+        <span class="text-gray-900 font-black text-2xl" id="cartTotalDisplay">0</span>
+      </div>
+    </div>
+    <button class="w-full flex items-center justify-center gap-2.5 py-4 rounded-2xl bg-gradient-to-r from-[#111827] to-gray-800 hover:from-orange-500 hover:to-orange-600 text-white font-bold text-base shadow-xl transition-all duration-300 hover:shadow-orange-500/30 hover:scale-[1.02] active:scale-[0.98] cursor-pointer">
+      去结算
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+    </button>
+  </div>
+</div>
+
+
+<script>
+// ─── 数据 ───────────────────────────────────────
+const PRODUCTS = [
+  { id:1, name:'极光无线蓝牙耳机 Pro', price:399, originalPrice:699, rating:4.9, sales:3841, badge:'热卖', badgeType:'hot', image:'https://placehold.co/400x400/111827/F97316?text=耳机', category:'数码', discount:43 },
+  { id:2, name:'碳纤维机械键盘 RGB', price:688, originalPrice:988, rating:4.8, sales:2156, badge:'折扣', badgeType:'sale', image:'https://placehold.co/400x400/1e3a5f/ffffff?text=键盘', category:'数码', discount:30 },
+  { id:3, name:'轻奢真皮简约钱包', price:258, originalPrice:458, rating:4.7, sales:5320, badge:'热卖', badgeType:'hot', image:'https://placehold.co/400x400/2d1b0e/ffffff?text=钱包', category:'配件' },
+  { id:4, name:'智能运动手表 Ultra', price:1299, originalPrice:1899, rating:4.9, sales:1289, badge:'限时', badgeType:'limited', image:'https://placehold.co/400x400/0a1628/ffffff?text=手表', category:'穿戴', discount:32 },
+  { id:5, name:'全铝 USB-C 扩展坞', price:319, originalPrice:499, rating:4.6, sales:7843, badge:'折扣', badgeType:'sale', image:'https://placehold.co/400x400/1c2833/ffffff?text=扩展坞', category:'数码', discount:36 },
+  { id:6, name:'15寸便携显示器', price:799, originalPrice:1199, rating:4.8, sales:4102, badge:'新品', badgeType:'new', image:'https://placehold.co/400x400/0d1f2d/ffffff?text=显示器', category:'数码' },
+  { id:7, name:'航空铝合金笔记本支架', price:189, originalPrice:299, rating:4.7, sales:9231, badge:'热卖', badgeType:'hot', image:'https://placehold.co/400x400/1a1a2e/ffffff?text=支架', category:'配件', discount:37 },
+  { id:8, name:'马卡龙速干毛巾套装', price:128, originalPrice:198, rating:4.5, sales:12048, badge:'折扣', badgeType:'sale', image:'https://placehold.co/400x400/f97316/ffffff?text=毛巾', category:'生活', discount:35 },
+]
+const BADGE_STYLES = { hot:'bg-orange-500 text-white', sale:'bg-rose-500 text-white', new:'bg-emerald-500 text-white', limited:'bg-purple-500 text-white' }
+const CATEGORIES = ['全部','数码','穿戴','配件','生活']
+
+let cartItems = {}   // { id: {product, quantity} }
+let likedIds = new Set()
+let activeCategory = '全部'
+let searchQuery = ''
+let currentSlide = 0
+let slideTimer = null
+
+// ─── 初始化 ────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  renderCatTabs()
+  renderProducts()
+  startSlideTimer()
+  window.addEventListener('scroll', () => {
+    const h = document.getElementById('header')
+    h.style.boxShadow = window.scrollY > 30 ? '0 4px 30px rgba(0,0,0,.4)' : ''
+  })
+})
+
+// ─── 分类 Tab ──────────────────────────────────
+function renderCatTabs() {
+  const wrap = document.getElementById('catTabs')
+  wrap.innerHTML = CATEGORIES.map(cat => `
+    <button onclick="setCategory('${cat}')" id="cat_${cat}"
+      class="shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200 cursor-pointer
+        ${activeCategory===cat ? 'bg-orange-500 text-white shadow-md' : 'text-gray-400 hover:text-white hover:bg-white/10'}">
+      ${cat}
+    </button>
+  `).join('')
+}
+function setCategory(cat) {
+  activeCategory = cat
+  renderCatTabs()
+  renderProducts()
+  const title = document.getElementById('sectionTitle')
+  title.textContent = cat === '全部' ? '精选好物' : cat + '精选'
+}
+
+// ─── 搜索 ──────────────────────────────────────
+function filterProducts(q) { searchQuery = q; renderProducts() }
+function resetSearch() { searchQuery=''; activeCategory='全部'; document.getElementById('searchInput').value=''; renderCatTabs(); renderProducts(); }
+function searchFocus(on) {
+  const wrap = document.getElementById('searchWrap')
+  const icon = document.getElementById('searchIcon')
+  wrap.style.boxShadow = on ? '0 0 0 2px rgba(249,115,22,.5), 0 4px 16px rgba(249,115,22,.1)' : ''
+  wrap.style.outline = 'none'
+  icon.style.color = on ? '#fb923c' : '#6b7280'
+}
+
+// ─── 商品渲染 ──────────────────────────────────
+function renderProducts() {
+  let list = PRODUCTS
+  if (activeCategory !== '全部') list = list.filter(p => p.category === activeCategory)
+  if (searchQuery.trim()) list = list.filter(p => p.name.toLowerCase().includes(searchQuery.toLowerCase()))
+  
+  const grid = document.getElementById('productGrid')
+  const empty = document.getElementById('emptyState')
+  document.getElementById('productCount').textContent = list.length + ' 件商品'
+
+  if (list.length === 0) { grid.classList.add('hidden'); empty.classList.remove('hidden'); return }
+  grid.classList.remove('hidden'); empty.classList.add('hidden')
+
+  grid.innerHTML = list.map(p => `
+    <div class="group relative bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer border border-gray-100/80">
+      <!-- 图片 -->
+      <div class="relative overflow-hidden aspect-square bg-gray-50">
+        <img src="${p.image}" alt="${p.name}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+        <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        ${p.badge ? `<span class="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-full text-[11px] font-bold tracking-wide shadow-md ${BADGE_STYLES[p.badgeType||'hot']}">${p.badge}</span>` : ''}
+        ${p.discount ? `<span class="absolute top-2.5 right-2.5 w-9 h-9 rounded-full bg-orange-500 text-white text-[10px] font-black flex items-center justify-center shadow-lg leading-tight text-center">-${p.discount}%</span>` : ''}
+        <button onclick="event.stopPropagation();toggleLike(${p.id})" id="heart_${p.id}"
+          class="absolute bottom-2.5 right-2.5 w-8 h-8 rounded-full flex items-center justify-center shadow-lg transition-all duration-200 cursor-pointer ${likedIds.has(p.id) ? 'bg-rose-500 text-white scale-110' : 'bg-white/90 text-gray-400 opacity-0 group-hover:opacity-100 backdrop-blur-sm hover:text-rose-400'}">
+          <svg class="w-3.5 h-3.5" fill="${likedIds.has(p.id)?'currentColor':'none'}" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </button>
+      </div>
+      <!-- 信息 -->
+      <div class="p-3.5 lg:p-4">
+        <div class="flex items-center gap-1.5 mb-2">
+          <svg class="w-3 h-3 text-amber-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <span class="text-amber-600 text-[11px] font-semibold">${p.rating}</span>
+          <span class="text-gray-300 text-[11px]">·</span>
+          <span class="text-gray-400 text-[11px]">${p.sales.toLocaleString()} 已售</span>
+        </div>
+        <h3 class="text-gray-900 font-semibold text-sm leading-snug line-clamp-2 mb-3">${p.name}</h3>
+        <div class="flex items-center justify-between gap-2">
+          <div>
+            <span class="text-orange-500 font-black text-lg leading-none">¥${p.price}</span>
+            <span class="text-gray-300 text-xs line-through ml-1.5">¥${p.originalPrice}</span>
+          </div>
+          <button onclick="event.stopPropagation();addToCart(${p.id})"
+            class="flex items-center gap-1 bg-[#111827] hover:bg-orange-500 text-white text-xs font-semibold px-3 py-1.5 rounded-xl transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer shadow-sm hover:shadow-orange-500/30 shrink-0">
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            加购
+          </button>
+        </div>
+      </div>
+    </div>
+  `).join('')
+}
+
+// ─── 收藏 ──────────────────────────────────────
+function toggleLike(id) {
+  if (likedIds.has(id)) likedIds.delete(id)
+  else likedIds.add(id)
+  renderProducts()
+}
+
+// ─── 购物车 ────────────────────────────────────
+function addToCart(productId) {
+  const p = PRODUCTS.find(x => x.id === productId)
+  if (!p) return
+  if (cartItems[productId]) cartItems[productId].quantity++
+  else cartItems[productId] = { product: p, quantity: 1 }
+  updateCartUI()
+  // Badge 弹跳
+  const btn = document.getElementById('cartBtn')
+  btn.classList.remove('anim-bounce-once')
+  void btn.offsetWidth
+  btn.classList.add('anim-bounce-once')
+}
+
+function removeFromCart(id) {
+  delete cartItems[id]
+  updateCartUI()
+  renderCartItems()
+}
+
+function changeQty(id, delta) {
+  if (!cartItems[id]) return
+  cartItems[id].quantity += delta
+  if (cartItems[id].quantity <= 0) delete cartItems[id]
+  updateCartUI()
+  renderCartItems()
+}
+
+function toggleCart(open) {
+  const overlay = document.getElementById('cartOverlay')
+  const drawer  = document.getElementById('cartDrawer')
+  if (open) {
+    overlay.classList.remove('hidden')
+    drawer.classList.remove('hidden')
+    document.body.style.overflow = 'hidden'
+    renderCartItems()
+  } else {
+    overlay.classList.add('hidden')
+    drawer.classList.add('hidden')
+    document.body.style.overflow = ''
+  }
+}
+
+function updateCartUI() {
+  const items = Object.values(cartItems)
+  const count = items.reduce((s, i) => s + i.quantity, 0)
+  const total = items.reduce((s, i) => s + i.product.price * i.quantity, 0)
+  // Badge
+  const badge = document.getElementById('cartBadge')
+  if (count > 0) { badge.textContent = count > 99 ? '99+' : count; badge.classList.remove('hidden') }
+  else badge.classList.add('hidden')
+  // Drawer label
+  const label = document.getElementById('cartCountLabel')
+  if (count > 0) { label.textContent = count; label.classList.remove('hidden') }
+  else label.classList.add('hidden')
+  // Summary & total
+  document.getElementById('cartSummary').textContent = `合计（${count} 件）`
+  document.getElementById('cartTotalDisplay').textContent = total.toLocaleString()
+  // Footer
+  const footer = document.getElementById('cartFooter')
+  if (count > 0) footer.classList.remove('hidden')
+  else footer.classList.add('hidden')
+}
+
+function renderCartItems() {
+  const items = Object.values(cartItems)
+  const body  = document.getElementById('cartItems')
+  const empty = document.getElementById('emptyCart')
+  if (items.length === 0) {
+    body.classList.add('hidden'); empty.classList.remove('hidden'); return
+  }
+  empty.classList.add('hidden'); body.classList.remove('hidden')
+  body.innerHTML = items.map(i => `
+    <div class="flex items-start gap-4 p-3.5 rounded-2xl bg-gray-50 hover:bg-gray-100/70 transition-colors group">
+      <div class="w-16 h-16 rounded-xl overflow-hidden shrink-0 bg-white shadow-sm">
+        <img src="${i.product.image}" alt="${i.product.name}" class="w-full h-full object-cover" />
+      </div>
+      <div class="flex-1 min-w-0">
+        <p class="text-gray-800 text-sm font-semibold line-clamp-2 leading-snug">${i.product.name}</p>
+        <p class="text-orange-500 font-black text-base mt-1">¥${i.product.price}</p>
+        <div class="flex items-center gap-2 mt-2.5">
+          <button onclick="changeQty(${i.product.id},-1)"
+            class="w-7 h-7 rounded-lg bg-white border border-gray-200 flex items-center justify-center hover:border-gray-300 hover:bg-gray-50 transition-all cursor-pointer active:scale-90 shadow-sm">
+            <svg class="w-3 h-3 text-gray-600" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14"/></svg>
+          </button>
+          <span class="w-6 text-center text-sm font-bold text-gray-900">${i.quantity}</span>
+          <button onclick="changeQty(${i.product.id},1)"
+            class="w-7 h-7 rounded-lg bg-[#111827] flex items-center justify-center hover:bg-gray-700 transition-all cursor-pointer active:scale-90 shadow-sm">
+            <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+      <button onclick="removeFromCart(${i.product.id})"
+        class="shrink-0 w-7 h-7 rounded-lg flex items-center justify-center text-gray-300 hover:text-rose-400 hover:bg-rose-50 transition-all cursor-pointer opacity-0 group-hover:opacity-100">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+      </button>
+    </div>
+  `).join('')
+}
+
+// ─── 轮播 ──────────────────────────────────────
+function goSlide(idx) {
+  document.getElementById('slide' + currentSlide).classList.add('hidden')
+  currentSlide = idx
+  document.getElementById('slide' + currentSlide).classList.remove('hidden')
+  updateDots()
+  clearInterval(slideTimer); startSlideTimer()
+}
+function startSlideTimer() {
+  slideTimer = setInterval(() => goSlide((currentSlide + 1) % 2), 4500)
+}
+function updateDots() {
+  ['dot0','dot1','dot0b','dot1b'].forEach(id => {
+    const el = document.getElementById(id)
+    if (!el) return
+    const idx = parseInt(id.replace('dot','').replace('b',''))
+    if (idx === currentSlide) { el.style.width='24px'; el.style.background= currentSlide===0?'#fb923c':'#a78bfa' }
+    else { el.style.width='8px'; el.style.background='rgba(255,255,255,0.3)' }
+  })
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,85 @@
+/* 全局输入框美化样式 */
+/* 使用方法：在 .input-float 容器内放 input + label */
+
+/* ===== 浮动标签输入框 ===== */
+.input-float {
+  @apply relative;
+}
+
+.input-float input {
+  @apply w-full px-4 pt-5 pb-2 border border-gray-200 rounded-xl 
+         text-sm text-gray-900 placeholder-transparent
+         transition-all duration-200
+         hover:border-gray-300
+         focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent
+         disabled:bg-gray-50 disabled:text-gray-400 disabled:cursor-not-allowed;
+}
+
+.input-float label {
+  @apply absolute left-4 text-gray-400 pointer-events-none 
+         transition-all duration-200
+         top-1/2 -translate-y-1/2 text-sm;
+}
+
+/* 有内容时：label 上浮 */
+.input-float input:not(:placeholder-shown) ~ label,
+.input-float input:focus ~ label {
+  @apply top-1.5 text-xs text-indigo-600 font-medium;
+  transform: translateY(-50%);
+}
+
+/* 错误状态 */
+.input-float.input-error input {
+  @apply border-red-300 focus:ring-red-500 focus:border-red-500;
+}
+
+.input-float.input-error label {
+  @apply text-red-400;
+}
+
+/* ===== 普通输入框 ===== */
+.input-std {
+  @apply w-full px-4 py-3 border border-gray-200 rounded-xl 
+         text-sm text-gray-900
+         transition-all duration-200
+         hover:border-gray-300
+         focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent
+         disabled:bg-gray-50 disabled:text-gray-400 disabled:cursor-not-allowed
+         placeholder:text-gray-400;
+}
+
+.input-std.input-error {
+  @apply border-red-300 focus:ring-red-500 focus:border-red-300;
+}
+
+/* ===== 密码输入框（带切换按钮） ===== */
+.input-password {
+  @apply relative;
+}
+
+.input-password input {
+  @apply w-full px-4 py-3 pr-12 border border-gray-200 rounded-xl 
+         text-sm text-gray-900
+         transition-all duration-200
+         hover:border-gray-300
+         focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent
+         disabled:bg-gray-50 disabled:text-gray-400 disabled:cursor-not-allowed
+         placeholder:text-gray-400;
+}
+
+.input-password button {
+  @apply absolute right-4 top-1/2 -translate-y-1/2 
+         text-gray-400 hover:text-gray-600 
+         transition-colors p-0.5 rounded-md 
+         hover:bg-gray-100;
+}
+
+/* ===== 文本域 ===== */
+.textarea-std {
+  @apply w-full px-4 py-3 border border-gray-200 rounded-xl 
+         text-sm text-gray-900 resize-none
+         transition-all duration-200
+         hover:border-gray-300
+         focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent
+         placeholder:text-gray-400;
+}

@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>电商平台系统使用报告</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+  .sidebar { scrollbar-width: thin; scrollbar-color: #CBD5E1 transparent; }
+  .sidebar::-webkit-scrollbar { width: 6px; }
+  .sidebar::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 3px; }
+  .prose h2 { scroll-margin-top: 80px; }
+  .prose h3 { scroll-margin-top: 80px; }
+  .gradient-text { background: linear-gradient(135deg, #6366F1 0%, #A855F7 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+</style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+<!-- 顶部导航 -->
+<header class="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200 h-16 flex items-center px-6">
+  <div class="flex items-center gap-3">
+    <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white font-bold text-lg">e</div>
+    <span class="font-bold text-lg gradient-text">电商平台系统使用报告</span>
+  </div>
+  <span class="ml-auto text-sm text-slate-400">v1.7 · 2026-06-21</span>
+</header>
+
+<!-- 侧边栏 -->
+<aside class="sidebar fixed left-0 top-16 bottom-0 w-64 bg-white border-r border-slate-200 overflow-y-auto py-6 px-4 z-40">
+  <nav class="space-y-1 text-sm">
+    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider px-3 mb-2">概览</p>
+    <a href="#overview" class="block px-3 py-2 rounded-lg text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition-colors">系统概览</a>
+    <a href="#architecture" class="block px-3 py-2 rounded-lg text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition-colors">技术架构</a>
+    <a href="#deploy" class="block px-3 py-2 rounded-lg text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition-colors">部署与启动</a>
+
+    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider px-3 mb-2 mt-5">角色指南</p>
+    <a href="#buyer" class="block px-3 py-2 rounded-lg text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition-colors">买家端</a>
+    <a href="#merchant" class="block px-3 py-2 rounded-lg text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition-colors">商家端</a>
+    <a href="#admin" class="block px-3 py-2 rounded-lg text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition-colors">管理员端</a>
+
+    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider px-3 mb-2 mt-5">核心流程</p>
+    <a href="#flow-shopping" class="block px-3 py-2 rounded-lg text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition-colors">购物流程</a>
+    <a href="#flow-order" class="block px-3 py-2 rounded-lg text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition-colors">订单全流程</a>
+    <a href="#flow-aftersale" class="block px-3 py-2 rounded-lg text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition-colors">售后服务</a>
+    <a href="#flow-merchant" class="block px-3 py-2 rounded-lg text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition-colors">商家入驻</a>
+
+    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider px-3 mb-2 mt-5">其他</p>
+    <a href="#customer-service" class="block px-3 py-2 rounded-lg text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition-colors">客服系统</a>
+    <a href="#ai-chat" class="block px-3 py-2 rounded-lg text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition-colors">AI 智能客服</a>
+    <a href="#api" class="block px-3 py-2 rounded-lg text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition-colors">API 参考</a>
+    <a href="#test-accounts" class="block px-3 py-2 rounded-lg text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition-colors">测试账号</a>
+  </nav>
+</aside>
+
+<!-- 主内容 -->
+<main class="ml-64 mt-16 p-8 max-w-5xl">
+<div class="prose max-w-none">
+
+<!-- ==================== 系统概览 ==================== -->
+<h2 id="overview" class="text-2xl font-bold text-slate-800 mb-4 flex items-center gap-2">
+  <span class="w-1.5 h-7 bg-indigo-500 rounded-full"></span>
+  一、系统概览
+</h2>
+
+<p class="text-slate-600 leading-relaxed mb-4">
+  本系统是一个完整的 B2C 多商家电商平台，支持 <strong>买家购物、商家入驻经营、管理员后台监管</strong> 三大角色体系。
+  涵盖商品浏览与搜索、多商家购物车拆单、订单全流程管理、售后服务、物流追踪、人工客服、AI 智能客服等核心功能。
+</p>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-6">
+  <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
+    <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center mb-3">
+      <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+    </div>
+    <h3 class="font-bold text-slate-800 mb-1">买家 (user)</h3>
+    <p class="text-sm text-slate-500">浏览商品、加购物车、下单支付、收藏、售后申请、在线客服</p>
+  </div>
+  <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
+    <div class="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center mb-3">
+      <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+    </div>
+    <h3 class="font-bold text-slate-800 mb-1">商家 (merchant)</h3>
+    <p class="text-sm text-slate-500">商品管理、订单发货、售后处理、店铺设置、AI 知识库、客服</p>
+  </div>
+  <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
+    <div class="w-10 h-10 rounded-xl bg-violet-50 flex items-center justify-center mb-3">
+      <svg class="w-5 h-5 text-violet-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+    </div>
+    <h3 class="font-bold text-slate-800 mb-1">管理员 (admin)</h3>
+    <p class="text-sm text-slate-500">用户管理、商家审核、商品/分类管理、订单监管、售后监管、数据看板</p>
+  </div>
+</div>
+
+<!-- ==================== 技术架构 ==================== -->
+<h2 id="architecture" class="text-2xl font-bold text-slate-800 mb-4 flex items-center gap-2 mt-10">
+  <span class="w-1.5 h-7 bg-indigo-500 rounded-full"></span>
+  二、技术架构
+</h2>
+
+<div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm my-4">
+  <table class="w-full text-sm">
+    <thead>
+      <tr class="border-b border-slate-200">
+        <th class="text-left py-3 px-4 font-semibold text-slate-700">层级</th>
+        <th class="text-left py-3 px-4 font-semibold text-slate-700">技术选型</th>
+        <th class="text-left py-3 px-4 font-semibold text-slate-700">说明</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-slate-100">
+      <tr>
+        <td class="py-3 px-4 font-medium text-slate-600">前端</td>
+        <td class="py-3 px-4 text-slate-600">Vue 3 + TypeScript + Pinia + Tailwind CSS v4 + Vite</td>
+        <td class="py-3 px-4 text-slate-500">Composition API，响应式 SPA</td>
+      </tr>
+      <tr>
+        <td class="py-3 px-4 font-medium text-slate-600">后端</td>
+        <td class="py-3 px-4 text-slate-600">FastAPI + Pydantic v2 + Psycopg3</td>
+        <td class="py-3 px-4 text-slate-500">异步框架，自动生成 OpenAPI 文档</td>
+      </tr>
+      <tr>
+        <td class="py-3 px-4 font-medium text-slate-600">数据库</td>
+        <td class="py-3 px-4 text-slate-600">PostgreSQL 16 (pgvector)</td>
+        <td class="py-3 px-4 text-slate-500">支持向量检索，AI 客服语义搜索</td>
+      </tr>
+      <tr>
+        <td class="py-3 px-4 font-medium text-slate-600">缓存</td>
+        <td class="py-3 px-4 text-slate-600">Redis 7</td>
+        <td class="py-3 px-4 text-slate-500">会话管理、Token 缓存</td>
+      </tr>
+      <tr>
+        <td class="py-3 px-4 font-medium text-slate-600">部署</td>
+        <td class="py-3 px-4 text-slate-600">Docker Compose + Nginx</td>
+        <td class="py-3 px-4 text-slate-500">四容器编排，Volume 挂载热更新</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="bg-indigo-50 border border-indigo-200 rounded-xl p-5 my-4">
+  <h4 class="font-semibold text-indigo-800 mb-3">系统架构图</h4>
+  <div class="bg-white rounded-lg p-4 font-mono text-xs text-slate-600 overflow-x-auto">
+<pre>
+┌─────────────────────────────────────────────────────┐
+│                    用户浏览器                         │
+│  http://localhost:5173 (Vite Dev) / :83 (Nginx)     │
+└──────────────────────┬──────────────────────────────┘
+                       │ HTTP
+┌──────────────────────▼──────────────────────────────┐
+│              Nginx (反向代理 :83)                     │
+└──────────────────────┬──────────────────────────────┘
+                       │
+┌──────────────────────▼──────────────────────────────┐
+│           FastAPI 后端 (:8004 → :8001)               │
+│  ┌──────────┐ ┌──────────┐ ┌──────────┐            │
+│  │ C端 API  │ │ M端 API  │ │ B端 API  │            │
+│  │ /c-endp  │ │ /m-endp  │ │ /b-endp  │            │
+│  └──────────┘ └──────────┘ └──────────┘            │
+│  ┌─────────────────────────────────────┐            │
+│  │     AI 客服 (通义千问 + RAG)         │            │
+│  └─────────────────────────────────────┘            │
+└──────┬───────────────────────────┬──────────────────┘
+       │                           │
+┌──────▼──────┐            ┌──────▼──────┐
+│ PostgreSQL  │            │   Redis 7   │
+│   (:5432)   │            │   (:6379)   │
+│  shop.*     │            │  Token缓存  │
+│  customer_  │            └─────────────┘
+│  service.*  │
+└─────────────┘
+</pre>
+  </div>
+</div>
+
+<!-- ==================== 部署 ==================== -->
+<h2 id="deploy" class="text-2xl font-bold text-slate-800 mb-4 flex items-center gap-2 mt-10">
+  <span class="w-1.5 h-7 bg-indigo-500 rounded-full"></span>
+  三、部署与启动
+</h2>
+
+<h3 class="text-lg font-semibold text-slate-700 mb-3">3.1 Docker Compose 一键启动</h3>
+<div class="bg-slate-900 rounded-xl p-5 my-3">
+  <pre class="text-sm text-slate-300"><code><span class="text-green-400"># 进入项目目录</span>
+cd D:\AI_Projects\test01
+
+<span class="text-green-400"># 构建并启动所有服务（首次）</span>
+docker compose up -d --build
+
+<span class="text-green-400"># 后续启动（已有镜像）</span>
+docker compose up -d
+
+<span class="text-green-400"># 查看服务状态</span>
+docker compose ps
+
+<span class="text-green-400"># 查看后端日志</span>
+docker compose logs -f shop-service
+
+<span class="text-green-400"># 停止所有服务</span>
+docker compose down</code></pre>
+</div>
+
+<h3 class="text-lg font-semibold text-slate-700 mb-3 mt-6">3.2 前端开发服务器（热更新）</h3>
+<div class="bg-slate-900 rounded-xl p-5 my-3">
+  <pre class="text-sm text-slate-300"><code><span class="text-green-400"># 进入前端目录</span>
+cd shop-frontend
+
+<span class="text-green-400"># 安装依赖（首次）</span>
+npm install
+
+<span class="text-green-400"># 启动 Vite 开发服务器</span>
+npx vite --port 5173</code></pre>
+</div>
+
+<h3 class="text-lg font-semibold text-slate-700 mb-3 mt-6">3.3 访问地址</h3>
+<div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm my-3">
+  <table class="w-full text-sm">
+    <thead>
+      <tr class="border-b border-slate-200">
+        <th class="text-left py-2 px-4 font-semibold text-slate-700">服务</th>
+        <th class="text-left py-2 px-4 font-semibold text-slate-700">地址</th>
+        <th class="text-left py-2 px-4 font-semibold text-slate-700">说明</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-slate-100">
+      <tr><td class="py-2 px-4 font-medium">前端 (开发)</td><td class="py-2 px-4 font-mono text-indigo-600">http://localhost:5173</td><td class="py-2 px-4 text-slate-500">Vite Dev Server</td></tr>
+      <tr><td class="py-2 px-4 font-medium">前端 (生产)</td><td class="py-2 px-4 font-mono text-indigo-600">http://localhost:83</td><td class="py-2 px-4 text-slate-500">Nginx 反向代理</td></tr>
+      <tr><td class="py-2 px-4 font-medium">后端 API</td><td class="py-2 px-4 font-mono text-indigo-600">http://localhost:8004/api/shop/</td><td class="py-2 px-4 text-slate-500">FastAPI 服务</td></tr>
+      <tr><td class="py-2 px-4 font-medium">API 文档</td><td class="py-2 px-4 font-mono text-indigo-600">http://localhost:8004/docs</td><td class="py-2 px-4 text-slate-500">Swagger UI 交互文档</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ==================== 买家端 ==================== -->
+<h2 id="buyer" class="text-2xl font-bold text-slate-800 mb-4 flex items-center gap-2 mt-10">
+  <span class="w-1.5 h-7 bg-blue-500 rounded-full"></span>
+  四、买家端使用指南
+</h2>
+
+<h3 class="text-lg font-semibold text-slate-700 mb-3">4.1 注册与登录</h3>
+<div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm my-3">
+  <ol class="space-y-3 text-sm text-slate-600">
+    <li class="flex gap-3"><span class="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-xs">1</span> 访问 <code class="bg-slate-100 px-1.5 py-0.5 rounded text-indigo-600">/login</code> 页面，点击「注册账号」</li>
+    <li class="flex gap-3"><span class="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-xs">2</span> 填写邮箱、密码（需字母+数字组合）、昵称、密保问题及答案</li>
+    <li class="flex gap-3"><span class="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-xs">3</span> 注册成功后自动跳转登录页，输入邮箱密码登录</li>
+    <li class="flex gap-3"><span class="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-xs">4</span> 系统根据角色自动跳转：买家 → 首页 <code class="bg-slate-100 px-1.5 py-0.5 rounded">/</code></li>
+  </ol>
+</div>
+
+<h3 class="text-lg font-semibold text-slate-700 mb-3 mt-6">4.2 商品浏览与搜索</h3>
+<div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm my-3">
+  <p class="text-sm text-slate-600 mb-3">访问 <code class="bg-slate-100 px-1.5 py-0.5 rounded text-indigo-600">/products</code> 商品列表页，支持以下筛选方式：</p>
+  <div class="grid grid-cols-2 gap-3 text-sm">
+    <div class="bg-slate-50 rounded-lg p-3"><strong class="text-slate-700">关键词搜索</strong><p class="text-slate-500 mt-1">输入商品名称模糊搜索</p></div>
+    <div class="bg-slate-50 rounded-lg p-3"><strong class="text-slate-700">分类筛选</strong><p class="text-slate-500 mt-1">按树形分类逐级浏览</p></div>
+    <div class="bg-slate-50 rounded-lg p-3"><strong class="text-slate-700">价格区间</strong><p class="text-slate-500 mt-1">设置最低/最高价格</p></div>
+    <div class="bg-slate-50 rounded-lg p-3"><strong class="text-slate-700">排序方式</strong><p class="text-slate-500 mt-1">价格升/降序、销量、最新</p></div>
+    <div class="bg-slate-50 rounded-lg p-3"><strong class="text-slate-700">仅看有货</strong><p class="text-slate-500 mt-1">过滤库存为 0 的商品</p></div>
+    <div class="bg-slate-50 rounded-lg p-3"><strong class="text-slate-700">热门商品</strong><p class="text-slate-500 mt-1">首页展示热销商品</p></div>
+  </div>
+  <p class="text-sm text-slate-600 mt-3">点击商品进入详情页 <code class="bg-slate-100 px-1.5 py-0.5 rounded text-indigo-600">/products/:id</code>，可查看图片、价格、库存、描述，并进行加购、收藏、咨询客服。</p>
+</div>
+
+<h3 class="text-lg font-semibold text-slate-700 mb-3 mt-6">4.3 购物车与下单</h3>
+<div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm my-3">
+  <div class="space-y-4 text-sm text-slate-600">
+    <div>
+      <p class="font-semibold text-slate-700 mb-1">加入购物车</p>
+      <p>在商品详情页选择数量后点击「加入购物车」，系统自动按商家分组展示。</p>
+    </div>
+    <div>
+      <p class="font-semibold text-slate-700 mb-1">购物车页面 (<code class="bg-slate-100 px-1.5 py-0.5 rounded">/cart</code>)</p>
+      <ul class="list-disc list-inside space-y-1 ml-2">
+        <li>商品按<strong>商家分组</strong>展示，每个商家有独立标题栏</li>
+        <li>支持<strong>按商家全选</strong>，也可单独勾选商品</li>
+        <li>底部显示已选商品数和总价</li>
+        <li>结算时如有多个商家的商品，会提示<strong>「将拆分为 N 个订单」</strong></li>
+      </ul>
+    </div>
+    <div>
+      <p class="font-semibold text-slate-700 mb-1">下单结算流程</p>
+      <ol class="list-decimal list-inside space-y-1 ml-2">
+        <li>点击「结算」→ 选择收货地址（支持地址簿管理）</li>
+        <li>确认订单信息 → 提交订单</li>
+        <li>系统自动按 merchant_id <strong>拆分独立订单</strong>（每个商家一个订单）</li>
+        <li>跳转订单列表，分别支付各订单</li>
+      </ol>
+    </div>
+  </div>
+  <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 mt-4 text-sm text-amber-700">
+    <strong>多商家拆单说明：</strong>不同商家的商品会自动拆分为独立订单，每个订单有独立的物流、支付、售后流程。这是系统的核心设计，确保各商家独立运营。
+  </div>
+</div>
+
+<h3 class="text-lg font-semibold text-slate-700 mb-3 mt-6">4.4 订单管理</h3>
+<div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm my-3">
+  <p class="text-sm text-slate-600 mb-3">访问 <code class="bg-slate-100 px-1.5 py-0.5 rounded text-indigo-600">/orders</code> 查看全部订单，支持按状态筛选。</p>
+  <table class="w-full text-sm">
+    <thead>
+      <tr class="border-b border-slate-200">
+        <th class="text-left py-2 px-3 font-semibold text-slate-700">订单状态</th>
+        <th class="text-left py-2 px-3 font-semibold text-slate-700">含义</th>
+        <th class="text-left py-2 px-3 font-semibold text-slate-700">买家可操作</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-slate-100">
+      <tr><td class="py-2 px-3"><span class="bg-amber-50 text-amber-700 px-2 py-0.5 rounded text-xs font-medium">pending</span></td><td class="py-2 px-3 text-slate-600">待支付</td><td class="py-2 px-3 text-slate-500">支付 / 取消</td></tr>
+      <tr><td class="py-2 px-3"><span class="bg-blue-50 text-blue-700 px-2 py-0.5 rounded text-xs font-medium">paid</span></td><td class="py-2 px-3 text-slate-600">已支付（待发货）</td><td class="py-2 px-3 text-slate-500">等待商家发货</td></tr>
+      <tr><td class="py-2 px-3"><span class="bg-orange-50 text-orange-700 px-2 py-0.5 rounded text-xs font-medium">shipped</span></td><td class="py-2 px-3 text-slate-600">已发货</td><td class="py-2 px-3 text-slate-500">查看物流 / 确认收货</td></tr>
+      <tr><td class="py-2 px-3"><span class="bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded text-xs font-medium">delivered</span></td><td class="py-2 px-3 text-slate-600">已收货</td><td class="py-2 px-3 text-slate-500">申请售后</td></tr>
+      <tr><td class="py-2 px-3"><span class="bg-gray-50 text-gray-500 px-2 py-0.5 rounded text-xs font-medium">cancelled</span></td><td class="py-2 px-3 text-slate-600">已取消</td><td class="py-2 px-3 text-slate-500">—</td></tr>
+    </tbody>
+  </table>
+  <p class="text-sm text-slate-600 mt-3">点击「查看物流」可进入物流详情页 <code class="bg-slate-100 px-1.5 py-0.5 rounded">/orders/:id/logistics</code>，查看配送进度。</p>
+</div>
+
+<h3 class="text-lg font-semibold text-slate-700 mb-3 mt-6">4.5 其他功能</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-3">
+  <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
+    <h4 class="font-semibold text-slate-700 mb-2">收藏夹 <code class="text-xs bg-slate-100 px-1.5 py-0.5 rounded">/favorites</code></h4>
+    <p class="text-sm text-slate-500">在商品详情页点击心形图标收藏，收藏夹页面可管理已收藏商品，支持取消收藏。</p>
+  </div>
+  <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
+    <h4 class="font-semibold text-slate-700 mb-2">个人中心 <code class="text-xs bg-slate-100 px-1.5 py-0.5 rounded">/profile</code></h4>
+    <p class="text-sm text-slate-500">修改昵称、头像、收货地址、密码。支持通过密保问题找回密码。</p>
+  </div>
+  <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
+    <h4 class="font-semibold text-slate-700 mb-2">地址簿</h4>
+    <p class="text-sm text-slate-500">管理多个收货地址（省/市/区/详细地址），可设置默认地址。下单时快速选择。</p>
+  </div>
+  <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
+    <h4 class="font-semibold text-slate-700 mb-2">在线客服</h4>
+    <p class="text-sm text-slate-500">商品详情页可发起客服会话（自动路由到对应商家），无商品时路由到系统管理员。支持 AI 客服 + 人工客服。</p>
+  </div>
+</div>
+
+<!-- ==================== 商家端 ==================== -->
+<h2 id="merchant" class="text-2xl font-bold text-slate-800 mb-4 flex items-center gap-2 mt-10">
+  <span class="w-1.5 h-7 bg-emerald-500 rounded-full"></span>
+  五、商家端使用指南
+</h2>
+
+<h3 class="text-lg font-semibold text-slate-700 mb-3">5.1 商家入驻流程</h3>
+<div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm my-3">
+  <ol class="space-y-3 text-sm text-slate-600">
+    <li class="flex gap-3"><span class="flex-shrink-0 w-6 h-6 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-xs">1</span> 在登录页点击「商家入驻」进入 <code class="bg-slate-100 px-1.5 py-0.5 rounded">/merchant-register</code></li>
+    <li class="flex gap-3"><span class="flex-shrink-0 w-6 h-6 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-xs">2</span> 填写邮箱、密码、昵称、店铺名称、经营类目</li>
+    <li class="flex gap-3"><span class="flex-shrink-0 w-6 h-6 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-xs">3</span> 上传营业执照和身份证（可选，图片转 Base64 存储）</li>
+    <li class="flex gap-3"><span class="flex-shrink-0 w-6 h-6 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-xs">4</span> 设置密保问题和答案</li>
+    <li class="flex gap-3"><span class="flex-shrink-0 w-6 h-6 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-xs">5</span> 提交后进入「等待审核」页面 <code class="bg-slate-100 px-1.5 py-0.5 rounded">/merchant-pending</code>，页面自动轮询审核状态</li>
+    <li class="flex gap-3"><span class="flex-shrink-0 w-6 h-6 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-xs">6</span> 管理员审核通过后，可登录商家后台 <code class="bg-slate-100 px-1.5 py-0.5 rounded">/merchant</code></li>
+  </ol>
+  <div class="bg-red-50 border border-red-200 rounded-lg p-3 mt-4 text-sm text-red-700">
+    <strong>审核状态：</strong>
+    <code>pending</code>（待审核）→ 
+    <code>approved</code>（通过，可登录） / 
+    <code>rejected</code>（拒绝，显示拒绝原因）
+  </div>
+</div>
+
+<h3 class="text-lg font-semibold text-slate-700 mb-3 mt-6">5.2 商家仪表盘</h3>
+<div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm my-3">
+  <p class="text-sm text-slate-600 mb-3">访问 <code class="bg-slate-100 px-1.5 py-0.5 rounded text-indigo-600">/merchant</code> 进入商家仪表盘：</p>
+  <div class="grid grid-cols-2 gap-3 text-sm">
+    <div class="bg-slate-50 rounded-lg p-3"><strong class="text-slate-700">今日订单</strong><p class="text-slate-500 mt-1">当日新增订单数</p></div>
+    <div class="bg-slate-50 rounded-lg p-3"><strong class="text-slate-700">在售商品</strong><p class="text-slate-500 mt-1">status=on_sale 的商品数</p></div>
+    <div class="bg-slate-50 rounded-lg p-3"><strong class="text-slate-700">待发货</strong><p class="text-slate-500 mt-1">status=paid 的订单数</p></div>
+    <div class="bg-slate-50 rounded-lg p-3"><strong class="text-slate-700">本月销售额</strong><p class="text-slate-500 mt-1">当月已支付订单总金额</p></div>
+  </div>
+  <p class="text-sm text-slate-600 mt-3">同时展示<strong>销售额走势图</strong>（SVG 面积图，最近 7 天）、店铺信息、最近订单列表。</p>
+</div>
+
+<h3 class="text-lg font-semibold text-slate-700 mb-3 mt-6">5.3 商品管理</h3>
+<div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm my-3">
+  <p class="text-sm text-slate-600 mb-3">访问 <code class="bg-slate-100 px-1.5 py-0.5 rounded text-indigo-600">/merchant/products</code> 管理商品：</p>
+  <ul class="space-y-2 text-sm text-slate-600">
+    <li class="flex gap-2"><span class="text-emerald-500">●</span> <strong>新增商品：</strong>填写名称、价格、库存、分类、图片 URL、描述、折扣价</li>
+    <li class="flex gap-2"><span class="text-emerald-500">●</span> <strong>编辑商品：</strong>修改商品信息</li>
+    <li class="flex gap-2"><span class="text-emerald-500">●</span> <strong>上下架：</strong>切换 <code>on_sale</code> / <code>off_sale</code> 状态</li>
+    <li class="flex gap-2"><span class="text-emerald-500">●</span> <strong>删除商品：</strong>永久删除（关联订单不受影响）</li>
+  </ul>
+  <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 mt-3 text-sm text-amber-700">
+    <strong>注意：</strong>新建商品默认为 <code>pending</code> 状态，需管理员审核通过后才会上架（<code>on_sale</code>）。
+  </div>
+</div>
+
+<h3 class="text-lg font-semibold text-slate-700 mb-3 mt-6">5.4 订单管理</h3>
+<div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm my-3">
+  <p class="text-sm text-slate-600 mb-3">访问 <code class="bg-slate-100 px-1.5 py-0.5 rounded text-indigo-600">/merchant/orders</code> 管理订单：</p>
+  <ul class="space-y-2 text-sm text-slate-600">
+    <li class="flex gap-2"><span class="text-emerald-500">●</span> 查看属于自己的订单（按 merchant_id 过滤）</li>
+    <li class="flex gap-2"><span class="text-emerald-500">●</span> 对 <code>paid</code> 状态订单进行<strong>发货</strong>，填写物流信息（快递公司 + 运单号）</li>
+    <li class="flex gap-2"><span class="text-emerald-500">●</span> 发货后订单状态变为 <code>shipped</code>，等待买家确认收货</li>
+  </ul>
+</div>
+
+<h3 class="text-lg font-semibold text-slate-700 mb-3 mt-6">5.5 售后处理</h3>
+<div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm my-3">
+  <p class="text-sm text-slate-600 mb-3">访问 <code class="bg-slate-100 px-1.5 py-0.5 rounded text-indigo-600">/merchant/after-sales</code> 处理买家售后申请：</p>
+  <table class="w-full text-sm">
+    <thead>
+      <tr class="border-b border-slate-200">
+        <th class="text-left py-2 px-3 font-semibold text-slate-700">操作</th>
+        <th class="text-left py-2 px-3 font-semibold text-slate-700">说明</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-slate-100">
+      <tr><td class="py-2 px-3 font-medium text-emerald-600">approve</td><td class="py-2 px-3 text-slate-600">同意售后申请（退款/换货）</td></tr>
+      <tr><td class="py-2 px-3 font-medium text-red-600">reject</td><td class="py-2 px-3 text-slate-600">拒绝售后申请，需填写拒绝原因</td></tr>
+      <tr><td class="py-2 px-3 font-medium text-blue-600">complete</td><td class="py-2 px-3 text-slate-600">完成售后（退款已到账 / 换货已完成）</td></tr>
+      <tr><td class="py-2 px-3 font-medium text-orange-600">resend</td><td class="py-2 px-3 text-slate-600">换货场景：商家重新发货给买家</td></tr>
+      <tr><td class="py-2 px-3 font-medium text-slate-600">confirm-received</td><td class="py-2 px-3 text-slate-600">确认收到买家退回的商品</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<h3 class="text-lg font-semibold text-slate-700 mb-3 mt-6">5.6 店铺设置</h3>
+<div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm my-3">
+  <p class="text-sm text-slate-600">访问 <code class="bg-slate-100 px-1.5 py-0.5 rounded text-indigo-600">/merchant/profile</code> 修改店铺信息：店铺名称、店铺描述、店铺 Logo。买家端会展示这些信息。</p>
+</div>
+
+<!-- ==================== 管理员端 ==================== -->
+<h2 id="admin" class="text-2xl font-bold text-slate-800 mb-4 flex items-center gap-2 mt-10">
+  <span class="w-1.5 h-7 bg-violet-500 rounded-full"></span>
+  六、管理员端使用指南
+</h2>
+
+<h3 class="text-lg font-semibold text-slate-700 mb-3">6.1 数据仪表盘</h3>
+<div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm my-3">
+  <p class="text-sm text-slate-600 mb-3">访问 <code class="bg-slate-100 px-1.5 py-0.5 rounded text-indigo-600">/admin</code> 查看运营数据概览：</p>
+  <div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm">
+    <div class="bg-slate-50 rounded-lg p-3"><strong class="text-slate-700">订单总数</strong></div>
+    <div class="bg-slate-50 rounded-lg p-3"><strong class="text-slate-700">总收入</strong><p class="text-slate-500 mt-1">已支付订单总金额</p></div>
+    <div class="bg-slate-50 rounded-lg p-3"><strong class="text-slate-700">用户总数</strong></div>
+    <div class="bg-slate-50 rounded-lg p-3"><strong class="text-slate-700">在售商品</strong></div>
+    <div class="bg-slate-50 rounded-lg p-3"><strong class="text-slate-700">待处理售后</strong></div>
+    <div class="bg-slate-50 rounded-lg p-3"><strong class="text-slate-700">商品分类</strong></div>
+  </div>
+  <p class="text-sm text-slate-600 mt-3">同时展示<strong>销售额走势图</strong>（SVG 面积图，最近 7 天真实数据）、快捷操作入口、最近订单列表。</p>
+</div>
+
+<h3 class="text-lg font-semibold text-slate-700 mb-3 mt-6">6.2 用户管理</h3>
+<div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm my-3">
+  <p class="text-sm text-slate-600 mb-3">访问 <code class="bg-slate-100 px-1.5 py-0.5 rounded text-indigo-600">/admin/users</code> 管理所有用户：</p>
+  <ul class="space-y-2 text-sm text-slate-600">
+    <li class="flex gap-2"><span class="text-violet-500">●</span> 查看所有用户列表（买家/商家/管理员）</li>
+    <li class="flex gap-2"><span class="text-violet-500">●</span> <strong>商家审核：</strong>批准 / 拒绝商家入驻申请（可填写拒绝原因）</li>
+    <li class="flex gap-2"><span class="text-violet-500">●</span> <strong>重置密码：</strong>为用户重置密码</li>
+    <li class="flex gap-2"><span class="text-violet-500">●</span> <strong>删除用户：</strong>删除违规用户</li>
+  </ul>
+</div>
+
+<h3 class="text-lg font-semibold text-slate-700 mb-3 mt-6">6.3 商品审核与管理</h3>
+<div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm my-3">
+  <p class="text-sm text-slate-600 mb-3">访问 <code class="bg-slate-100 px-1.5 py-0.5 rounded text-indigo-600">/admin/products</code>：</p>
+  <ul class="space-y-2 text-sm text-slate-600">
+    <li class="flex gap-2"><span class="text-violet-500">●</span> 查看所有商品（全平台）</li>
+    <li class="flex gap-2"><span class="text-violet-500">●</span> <strong>商品审核：</strong>批准 / 拒绝商家新建的商品（pending → on_sale / rejected）</li>
+    <li class="flex gap-2"><span class="text-violet-500">●</span> <strong>强制下架：</strong>违规商品可强制改为 off_sale</li>
+    <li class="flex gap-2"><span class="text-violet-500">●</span> 删除商品</li>
+  </ul>
+  <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 mt-3 text-sm text-amber-700">
+    <strong>管理员在商城页面为「预览模式」：</strong>管理员可以浏览商品，但隐藏加购/购买/收藏/结算按钮。
+  </div>
+</div>
+
+<h3 class="text-lg font-semibold text-slate-700 mb-3 mt-6">6.4 分类管理</h3>
+<div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm my-3">
+  <p class="text-sm text-slate-600 mb-3">访问 <code class="bg-slate-100 px-1.5 py-0.5 rounded text-indigo-600">/admin/categories</code>：</p>
+  <ul class="space-y-2 text-sm text-slate-600">
+    <li class="flex gap-2"><span class="text-violet-500">●</span> 支持<strong>树形分类</strong>结构（parent_id 自关联）</li>
+    <li class="flex gap-2"><span class="text-violet-500">●</span> 新增 / 编辑 / 删除分类</li>
+    <li class="flex gap-2"><span class="text-violet-500">●</span> 设置父级分类实现多级嵌套</li>
+  </ul>
+</div>
+
+<h3 class="text-lg font-semibold text-slate-700 mb-3 mt-6">6.5 订单与售后监管</h3>
+<div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm my-3">
+  <p class="text-sm text-slate-600">
+    管理员可查看全平台订单 <code class="bg-slate-100 px-1.5 py-0.5 rounded">/admin/orders</code> 和售后记录 <code class="bg-slate-100 px-1.5 py-0.5 rounded">/admin/after-sales</code>，
+    但<strong>为「监管模式」——只查看不操作</strong>。订单发货、售后处理由商家完成，管理员仅监督买卖双方行为。
+  </p>
+</div>
+
+<h3 class="text-lg font-semibold text-slate-700 mb-3 mt-6">6.6 邮箱换绑审核</h3>
+<div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm my-3">
+  <p class="text-sm text-slate-600">访问 <code class="bg-slate-100 px-1.5 py-0.5 rounded text-indigo-600">/admin/email-changes</code> 审核用户提交的邮箱更换申请，可批准或拒绝。</p>
+</div>
+
+<!-- ==================== 核心流程 ==================== -->
+<h2 id="flow-shopping" class="text-2xl font-bold text-slate-800 mb-4 flex items-center gap-2 mt-10">
+  <span class="w-1.5 h-7 bg-amber-500 rounded-full"></span>
+  七、核心业务流程
+</h2>
+
+<h3 class="text-lg font-semibold text-slate-700 mb-3">7.1 购物流程</h3>
+<div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm my-3">
+  <div class="bg-slate-50 rounded-lg p-4 font-mono text-sm text-slate-600">
+<pre>
+浏览商品 → 加入购物车 → 查看购物车（按商家分组）
+    → 勾选商品 → 点击结算 → 选择收货地址
+    → 确认订单 → 系统按商家拆分独立订单
+    → 分别支付各订单 → 等待商家发货
+</pre>
+  </div>
+</div>
+
+<h3 id="flow-order" class="text-lg font-semibold text-slate-700 mb-3 mt-6">7.2 订单全流程</h3>
+<div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm my-3">
+  <div class="bg-slate-50 rounded-lg p-4 font-mono text-sm text-slate-600">
+<pre>
+买家下单                    商家发货                  买家确认
+   │                          │                        │
+   ▼                          ▼                        ▼
+┌───────┐  支付  ┌───────┐  发货  ┌────────┐  确认  ┌──────────┐
+│pending│──────▶│ paid  │──────▶│shipped │──────▶│delivered │
+└───────┘       └───────┘       └────────┘       └──────────┘
+   │ 取消                           │                    │
+   ▼                                │ 查看物流            │ 申请售后
+┌──────────┐                       ▼                    ▼
+│cancelled │                 ┌──────────┐         ┌──────────┐
+└──────────┘                 │物流详情页│         │ 售后流程 │
+                             └──────────┘         └──────────┘
+</pre>
+  </div>
+</div>
+
+<h3 id="flow-aftersale" class="text-lg font-semibold text-slate-700 mb-3 mt-6">7.3 售后服务流程</h3>
+<div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm my-3">
+  <div class="bg-slate-50 rounded-lg p-4 font-mono text-sm text-slate-600">
+<pre>
+买家发起售后（退款/换货）
+         │
+         ▼
+┌────────────┐
+│  pending   │ ← 商家审核中
+└─────┬──────┘
+      │
+   ┌──┴──┐
+   ▼     ▼
+ 同意   拒绝
+   │     │
+   │     ▼
+   │  rejected（显示拒绝原因）
+   │
+   ▼
+（退款场景）           （换货场景）
+商家完成退款           买家寄回商品 → 商家确认收到
+   │                       │
+   ▼                       ▼
+completed              商家重新发货 → 买家确认收到
+                           │
+                           ▼
+                       completed
+</pre>
+  </div>
+  <p class="text-sm text-slate-600 mt-3">买家可在 <code class="bg-slate-100 px-1.5 py-0.5 rounded">/after-sales</code> 页面查看售后进度，可填写退货物流信息，可取消未处理的售后申请。</p>
+</div>
+
+<h3 id="flow-merchant" class="text-lg font-semibold text-slate-700 mb-3 mt-6">7.4 商家入驻流程</h3>
+<div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm my-3">
+  <div class="bg-slate-50 rounded-lg p-4 font-mono text-sm text-slate-600">
+<pre>
+填写入驻申请（邮箱/密码/店铺名/营业执照/身份证）
+         │
+         ▼
+┌─────────────────────┐
+│ merchant_status=null │ → 提交后变为 pending
+└──────────┬──────────┘
+           │
+           ▼
+┌──────────────────┐     自动轮询审核状态
+│ pending（等待中）│ ←─── MerchantPending 页面
+└────────┬─────────┘
+    ┌────┴────┐
+    ▼         ▼
+  通过      拒绝
+    │         │
+    ▼         ▼
+┌─────────┐ ┌──────────────────────┐
+│approved │ │rejected（含拒绝原因）│
+└─────────┘ └──────────────────────┘
+    │
+    ▼
+可登录商家后台 /merchant
+</pre>
+  </div>
+</div>
+
+<!-- ==================== 客服系统 ==================== -->
+<h2 id="customer-service" class="text-2xl font-bold text-slate-800 mb-4 flex items-center gap-2 mt-10">
+  <span class="w-1.5 h-7 bg-cyan-500 rounded-full"></span>
+  八、人工客服系统
+</h2>
+
+<div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm my-3">
+  <h3 class="font-semibold text-slate-700 mb-3">8.1 会话路由规则</h3>
+  <div class="bg-cyan-50 border border-cyan-200 rounded-lg p-4 text-sm text-slate-700">
+    <ul class="space-y-2">
+      <li><strong>有 product_id</strong> → 路由到对应<strong>商家</strong>（商品归属的 merchant）</li>
+      <li><strong>无 product_id</strong> → 路由到<strong>系统管理员</strong>（系统级咨询）</li>
+    </ul>
+  </div>
+
+  <h3 class="font-semibold text-slate-700 mb-3 mt-4">8.2 各角色客服入口</h3>
+  <table class="w-full text-sm">
+    <thead>
+      <tr class="border-b border-slate-200">
+        <th class="text-left py-2 px-3 font-semibold text-slate-700">角色</th>
+        <th class="text-left py-2 px-3 font-semibold text-slate-700">入口</th>
+        <th class="text-left py-2 px-3 font-semibold text-slate-700">功能</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-slate-100">
+      <tr><td class="py-2 px-3 font-medium">买家</td><td class="py-2 px-3">商品详情页右下角悬浮按钮</td><td class="py-2 px-3 text-slate-500">发起会话、发送消息、查看历史</td></tr>
+      <tr><td class="py-2 px-3 font-medium">商家</td><td class="py-2 px-3"><code>/merchant/chat</code></td><td class="py-2 px-3 text-slate-500">查看会话列表、回复消息、关闭会话</td></tr>
+      <tr><td class="py-2 px-3 font-medium">管理员</td><td class="py-2 px-3"><code>/admin/chat</code></td><td class="py-2 px-3 text-slate-500">处理系统级会话、回复消息</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="font-semibold text-slate-700 mb-3 mt-4">8.3 技术特性</h3>
+  <ul class="space-y-2 text-sm text-slate-600">
+    <li class="flex gap-2"><span class="text-cyan-500">●</span> <strong>增量轮询：</strong>前端通过 <code>after_id</code> 参数只拉取新消息，减少带宽</li>
+    <li class="flex gap-2"><span class="text-cyan-500">●</span> <strong>归属权验证：</strong>各角色只能访问自己的会话，越权返回 403</li>
+    <li class="flex gap-2"><span class="text-cyan-500">●</span> <strong>乐观更新：</strong>前端发送消息时立即显示（占位 ID），服务端返回后替换</li>
+    <li class="flex gap-2"><span class="text-cyan-500">●</span> <strong>已读标记：</strong>支持标记消息已读，显示未读计数</li>
+    <li class="flex gap-2"><span class="text-cyan-500">●</span> <strong>会话关闭：</strong>商家/管理员可关闭已完结的会话</li>
+  </ul>
+</div>
+
+<!-- ==================== AI 客服 ==================== -->
+<h2 id="ai-chat" class="text-2xl font-bold text-slate-800 mb-4 flex items-center gap-2 mt-10">
+  <span class="w-1.5 h-7 bg-rose-500 rounded-full"></span>
+  九、AI 智能客服
+</h2>
+
+<div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm my-3">
+  <p class="text-sm text-slate-600 mb-4">系统内置 AI 智能客服，基于通义千问大模型 + RAG（检索增强生成），支持知识库问答。</p>
+
+  <h3 class="font-semibold text-slate-700 mb-3">9.1 知识库管理</h3>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class="bg-rose-50 border border-rose-200 rounded-xl p-4">
+      <h4 class="font-semibold text-rose-800 mb-2">管理员知识库</h4>
+      <p class="text-sm text-slate-600">入口：<code class="bg-white px-1.5 py-0.5 rounded">/admin/ai-chat</code></p>
+      <p class="text-sm text-slate-600 mt-1">上传系统级知识文件（FAQ、政策等），对所有商家和买家生效。</p>
+    </div>
+    <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+      <h4 class="font-semibold text-emerald-800 mb-2">商家知识库</h4>
+      <p class="text-sm text-slate-600">入口：<code class="bg-white px-1.5 py-0.5 rounded">/merchant/ai-chat</code></p>
+      <p class="text-sm text-slate-600 mt-1">上传店铺专属知识（商品说明、退换政策等），仅对该商家的买家生效。支持按商品维度关联。</p>
+    </div>
+  </div>
+
+  <h3 class="font-semibold text-slate-700 mb-3 mt-4">9.2 工作原理</h3>
+  <div class="bg-slate-50 rounded-lg p-4 font-mono text-sm text-slate-600">
+<pre>
+买家提问
+   │
+   ▼
+┌─────────────────────────┐
+│ 1. 向量检索知识库        │  pgvector 语义搜索 top_k=3
+│    (kb_chunks 表)        │
+├─────────────────────────┤
+│ 2. 组装 Prompt           │  系统提示 + 检索到的知识片段 + 用户问题
+├─────────────────────────┤
+│ 3. 调用通义千问 API      │  生成回答
+├─────────────────────────┤
+│ 4. 返回回答 + 引用来源   │  买家端展示
+└─────────────────────────┘
+</pre>
+  </div>
+  <p class="text-sm text-slate-600 mt-3">买家在商品详情页的 AI 客服对话框提问，系统自动检索商家知识库 + 系统知识库，生成准确回答。</p>
+</div>
+
+<!-- ==================== API 参考 ==================== -->
+<h2 id="api" class="text-2xl font-bold text-slate-800 mb-4 flex items-center gap-2 mt-10">
+  <span class="w-1.5 h-7 bg-slate-500 rounded-full"></span>
+  十、API 接口参考
+</h2>
+
+<p class="text-slate-600 text-sm mb-4">完整交互文档请访问 <a href="http://localhost:8004/docs" class="text-indigo-600 underline">http://localhost:8004/docs</a>（Swagger UI）</p>
+
+<div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm my-3 overflow-x-auto">
+  <table class="w-full text-sm">
+    <thead>
+      <tr class="border-b border-slate-200">
+        <th class="text-left py-2 px-3 font-semibold text-slate-700">模块</th>
+        <th class="text-left py-2 px-3 font-semibold text-slate-700">前缀</th>
+        <th class="text-left py-2 px-3 font-semibold text-slate-700">主要接口</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-slate-100">
+      <tr><td class="py-2 px-3 font-medium text-blue-600">C端-用户</td><td class="py-2 px-3 font-mono text-xs">/c-endpoint/user</td><td class="py-2 px-3 text-slate-500">注册/登录/资料/密码/头像/店铺信息</td></tr>
+      <tr><td class="py-2 px-3 font-medium text-blue-600">C端-商品</td><td class="py-2 px-3 font-mono text-xs">/c-endpoint/products</td><td class="py-2 px-3 text-slate-500">列表/详情/热门（支持筛选排序）</td></tr>
+      <tr><td class="py-2 px-3 font-medium text-blue-600">C端-购物车</td><td class="py-2 px-3 font-mono text-xs">/c-endpoint/cart</td><td class="py-2 px-3 text-slate-500">查看/添加/修改数量/删除</td></tr>
+      <tr><td class="py-2 px-3 font-medium text-blue-600">C端-订单</td><td class="py-2 px-3 font-mono text-xs">/c-endpoint/orders</td><td class="py-2 px-3 text-slate-500">下单/支付/取消/确认收货/列表/详情</td></tr>
+      <tr><td class="py-2 px-3 font-medium text-blue-600">C端-售后</td><td class="py-2 px-3 font-mono text-xs">/c-endpoint/after-sales</td><td class="py-2 px-3 text-slate-500">申请/列表/详情/取消/退货物流</td></tr>
+      <tr><td class="py-2 px-3 font-medium text-blue-600">C端-收藏</td><td class="py-2 px-3 font-mono text-xs">/c-endpoint/favorites</td><td class="py-2 px-3 text-slate-500">收藏/取消/列表/检查</td></tr>
+      <tr><td class="py-2 px-3 font-medium text-blue-600">C端-地址</td><td class="py-2 px-3 font-mono text-xs">/c-endpoint/addresses</td><td class="py-2 px-3 text-slate-500">增删改查/设默认</td></tr>
+      <tr><td class="py-2 px-3 font-medium text-blue-600">C端-物流</td><td class="py-2 px-3 font-mono text-xs">/c-endpoint/logistics</td><td class="py-2 px-3 text-slate-500">查看物流记录</td></tr>
+      <tr><td class="py-2 px-3 font-medium text-blue-600">C端-客服</td><td class="py-2 px-3 font-mono text-xs">/c-endpoint/chat</td><td class="py-2 px-3 text-slate-500">创建会话/发消息/拉取消息/标记已读</td></tr>
+      <tr><td class="py-2 px-3 font-medium text-blue-600">C端-AI客服</td><td class="py-2 px-3 font-mono text-xs">/c-endpoint/ai-chat</td><td class="py-2 px-3 text-slate-500">AI 问答</td></tr>
+      <tr><td class="py-2 px-3 font-medium text-emerald-600">M端-商品</td><td class="py-2 px-3 font-mono text-xs">/m-endpoint/products</td><td class="py-2 px-3 text-slate-500">CRUD/上下架</td></tr>
+      <tr><td class="py-2 px-3 font-medium text-emerald-600">M端-订单</td><td class="py-2 px-3 font-mono text-xs">/m-endpoint/orders</td><td class="py-2 px-3 text-slate-500">列表/发货</td></tr>
+      <tr><td class="py-2 px-3 font-medium text-emerald-600">M端-售后</td><td class="py-2 px-3 font-mono text-xs">/m-endpoint/after-sales</td><td class="py-2 px-3 text-slate-500">同意/拒绝/完成/确认收到/重新发货</td></tr>
+      <tr><td class="py-2 px-3 font-medium text-emerald-600">M端-客服</td><td class="py-2 px-3 font-mono text-xs">/m-endpoint/chat</td><td class="py-2 px-3 text-slate-500">会话列表/回复/标记已读</td></tr>
+      <tr><td class="py-2 px-3 font-medium text-emerald-600">M端-AI知识库</td><td class="py-2 px-3 font-mono text-xs">/m-endpoint/ai-kb</td><td class="py-2 px-3 text-slate-500">上传/列表/删除知识文件</td></tr>
+      <tr><td class="py-2 px-3 font-medium text-violet-600">B端-仪表盘</td><td class="py-2 px-3 font-mono text-xs">/b-endpoint/dashboard</td><td class="py-2 px-3 text-slate-500">统计数据/销售额走势</td></tr>
+      <tr><td class="py-2 px-3 font-medium text-violet-600">B端-用户</td><td class="py-2 px-3 font-mono text-xs">/b-endpoint/users</td><td class="py-2 px-3 text-slate-500">列表/详情/重置密码/商家审核/删除</td></tr>
+      <tr><td class="py-2 px-3 font-medium text-violet-600">B端-商品</td><td class="py-2 px-3 font-mono text-xs">/b-endpoint/products</td><td class="py-2 px-3 text-slate-500">全平台商品/审核/上下架/删除</td></tr>
+      <tr><td class="py-2 px-3 font-medium text-violet-600">B端-分类</td><td class="py-2 px-3 font-mono text-xs">/b-endpoint/categories</td><td class="py-2 px-3 text-slate-500">树形分类 CRUD</td></tr>
+      <tr><td class="py-2 px-3 font-medium text-violet-600">B端-订单</td><td class="py-2 px-3 font-mono text-xs">/b-endpoint/orders</td><td class="py-2 px-3 text-slate-500">全平台订单列表/删除</td></tr>
+      <tr><td class="py-2 px-3 font-medium text-violet-600">B端-售后</td><td class="py-2 px-3 font-mono text-xs">/b-endpoint/after-sales</td><td class="py-2 px-3 text-slate-500">全平台售后监管</td></tr>
+      <tr><td class="py-2 px-3 font-medium text-violet-600">B端-邮箱审核</td><td class="py-2 px-3 font-mono text-xs">/b-endpoint/users/email-changes</td><td class="py-2 px-3 text-slate-500">批准/拒绝邮箱换绑</td></tr>
+      <tr><td class="py-2 px-3 font-medium text-violet-600">B端-AI知识库</td><td class="py-2 px-3 font-mono text-xs">/b-endpoint/ai-kb</td><td class="py-2 px-3 text-slate-500">系统级知识库管理</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="bg-blue-50 border border-blue-200 rounded-xl p-5 my-4">
+  <h4 class="font-semibold text-blue-800 mb-2">统一响应格式</h4>
+  <div class="bg-slate-900 rounded-lg p-4">
+    <pre class="text-sm text-slate-300"><code>{
+  "code": 0,           <span class="text-slate-500">// 0 = 成功，非 0 = 业务错误</span>
+  "data": { ... },      <span class="text-slate-500">// 业务数据</span>
+  "message": "success"  <span class="text-slate-500">// 提示信息</span>
+}</code></pre>
+  </div>
+  <p class="text-sm text-slate-600 mt-2">列表接口统一返回 <code>{ items, total, page, size }</code> 格式，前端使用 <code>res.data.items</code> 获取数组。</p>
+</div>
+
+<!-- ==================== 测试账号 ==================== -->
+<h2 id="test-accounts" class="text-2xl font-bold text-slate-800 mb-4 flex items-center gap-2 mt-10">
+  <span class="w-1.5 h-7 bg-slate-500 rounded-full"></span>
+  十一、测试账号
+</h2>
+
+<div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm my-3">
+  <table class="w-full text-sm">
+    <thead>
+      <tr class="border-b border-slate-200">
+        <th class="text-left py-2 px-4 font-semibold text-slate-700">角色</th>
+        <th class="text-left py-2 px-4 font-semibold text-slate-700">邮箱</th>
+        <th class="text-left py-2 px-4 font-semibold text-slate-700">密码</th>
+        <th class="text-left py-2 px-4 font-semibold text-slate-700">说明</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-slate-100">
+      <tr><td class="py-2 px-4"><span class="bg-violet-50 text-violet-700 px-2 py-0.5 rounded text-xs font-medium">管理员</span></td><td class="py-2 px-4 font-mono">admin@shop.local</td><td class="py-2 px-4 font-mono">12345678</td><td class="py-2 px-4 text-slate-500">全权限</td></tr>
+      <tr><td class="py-2 px-4"><span class="bg-blue-50 text-blue-700 px-2 py-0.5 rounded text-xs font-medium">买家</span></td><td class="py-2 px-4 font-mono">test@test.com</td><td class="py-2 px-4 font-mono">12345678</td><td class="py-2 px-4 text-slate-500">测试购物</td></tr>
+      <tr><td class="py-2 px-4"><span class="bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded text-xs font-medium">商家</span></td><td class="py-2 px-4 font-mono">testmerchant2@shop.com</td><td class="py-2 px-4 font-mono">12345678</td><td class="py-2 px-4 text-slate-500">已审核通过</td></tr>
+    </tbody>
+  </table>
+  <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 mt-4 text-sm text-amber-700">
+    <strong>密码规则：</strong>必须包含字母 + 数字组合，最少 8 位。
+  </div>
+</div>
+
+<!-- ==================== 数据库表 ==================== -->
+<h2 class="text-2xl font-bold text-slate-800 mb-4 flex items-center gap-2 mt-10">
+  <span class="w-1.5 h-7 bg-slate-500 rounded-full"></span>
+  十二、数据库表结构
+</h2>
+
+<div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm my-3">
+  <h3 class="font-semibold text-slate-700 mb-3">业务表 (shop schema)</h3>
+  <table class="w-full text-sm">
+    <thead>
+      <tr class="border-b border-slate-200">
+        <th class="text-left py-2 px-3 font-semibold text-slate-700">表名</th>
+        <th class="text-left py-2 px-3 font-semibold text-slate-700">说明</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-slate-100">
+      <tr><td class="py-2 px-3 font-mono text-xs">shop.users</td><td class="py-2 px-3 text-slate-500">用户表（含角色、商家审核状态、店铺信息、密保）</td></tr>
+      <tr><td class="py-2 px-3 font-mono text-xs">shop.products</td><td class="py-2 px-3 text-slate-500">商品表（含 merchant_id、category_id、discount、sales）</td></tr>
+      <tr><td class="py-2 px-3 font-mono text-xs">shop.categories</td><td class="py-2 px-3 text-slate-500">分类表（parent_id 自关联树形结构）</td></tr>
+      <tr><td class="py-2 px-3 font-mono text-xs">shop.orders</td><td class="py-2 px-3 text-slate-500">订单表（含 merchant_id 直接关联商家）</td></tr>
+      <tr><td class="py-2 px-3 font-mono text-xs">shop.order_items</td><td class="py-2 px-3 text-slate-500">订单项表</td></tr>
+      <tr><td class="py-2 px-3 font-mono text-xs">shop.cart_items</td><td class="py-2 px-3 text-slate-500">购物车表</td></tr>
+      <tr><td class="py-2 px-3 font-mono text-xs">shop.after_sale_requests</td><td class="py-2 px-3 text-slate-500">售后申请表（含 user_id 买家 + merchant_id 卖家）</td></tr>
+      <tr><td class="py-2 px-3 font-mono text-xs">shop.user_addresses</td><td class="py-2 px-3 text-slate-500">地址簿表</td></tr>
+      <tr><td class="py-2 px-3 font-mono text-xs">shop.user_favorites</td><td class="py-2 px-3 text-slate-500">收藏表</td></tr>
+      <tr><td class="py-2 px-3 font-mono text-xs">shop.logistics_records</td><td class="py-2 px-3 text-slate-500">物流记录表</td></tr>
+      <tr><td class="py-2 px-3 font-mono text-xs">shop.payment_records</td><td class="py-2 px-3 text-slate-500">支付记录表</td></tr>
+      <tr><td class="py-2 px-3 font-mono text-xs">shop.email_change_requests</td><td class="py-2 px-3 text-slate-500">邮箱换绑申请表</td></tr>
+      <tr><td class="py-2 px-3 font-mono text-xs">shop.kb_files</td><td class="py-2 px-3 text-slate-500">AI 知识库文件表</td></tr>
+      <tr><td class="py-2 px-3 font-mono text-xs">shop.kb_chunks</td><td class="py-2 px-3 text-slate-500">AI 知识库向量分片表</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="font-semibold text-slate-700 mb-3 mt-5">客服表 (customer_service schema)</h3>
+  <table class="w-full text-sm">
+    <thead>
+      <tr class="border-b border-slate-200">
+        <th class="text-left py-2 px-3 font-semibold text-slate-700">表名</th>
+        <th class="text-left py-2 px-3 font-semibold text-slate-700">说明</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-slate-100">
+      <tr><td class="py-2 px-3 font-mono text-xs">customer_service.chat_sessions</td><td class="py-2 px-3 text-slate-500">客服会话表</td></tr>
+      <tr><td class="py-2 px-3 font-mono text-xs">customer_service.chat_messages</td><td class="py-2 px-3 text-slate-500">客服消息表</td></tr>
+      <tr><td class="py-2 px-3 font-mono text-xs">customer_service.conversations</td><td class="py-2 px-3 text-slate-500">AI 对话历史表</td></tr>
+      <tr><td class="py-2 px-3 font-mono text-xs">customer_service.messages</td><td class="py-2 px-3 text-slate-500">AI 消息表</td></tr>
+      <tr><td class="py-2 px-3 font-mono text-xs">customer_service.faq_embeddings</td><td class="py-2 px-3 text-slate-500">FAQ 向量表</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ==================== 版本历史 ==================== -->
+<h2 class="text-2xl font-bold text-slate-800 mb-4 flex items-center gap-2 mt-10">
+  <span class="w-1.5 h-7 bg-slate-500 rounded-full"></span>
+  十三、版本历史
+</h2>
+
+<div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm my-3">
+  <table class="w-full text-sm">
+    <thead>
+      <tr class="border-b border-slate-200">
+        <th class="text-left py-2 px-3 font-semibold text-slate-700">版本</th>
+        <th class="text-left py-2 px-3 font-semibold text-slate-700">内容</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-slate-100">
+      <tr><td class="py-2 px-3 font-mono text-indigo-600">v1.7</td><td class="py-2 px-3 text-slate-500">仪表盘销售额走势改为 SVG 面积图，接入真实数据</td></tr>
+      <tr><td class="py-2 px-3 font-mono text-indigo-600">v1.6.1</td><td class="py-2 px-3 text-slate-500">工作记忆更新</td></tr>
+      <tr><td class="py-2 px-3 font-mono text-indigo-600">v1.6</td><td class="py-2 px-3 text-slate-500">客服系统异常处理完善 + 越权访问返回 403</td></tr>
+      <tr><td class="py-2 px-3 font-mono text-indigo-600">v1.5.2</td><td class="py-2 px-3 text-slate-500">客服系统逻辑闭环修复</td></tr>
+      <tr><td class="py-2 px-3 font-mono text-indigo-600">v1.5</td><td class="py-2 px-3 text-slate-500">多商家购物车按商家拆分订单</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="text-center text-slate-400 text-sm mt-12 mb-8">
+  <p>电商平台系统使用报告 · v1.7 · 2026-06-21</p>
+</div>
+
+</div>
+</main>
+
+<script>
+  // 平滑滚动
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault()
+      const target = document.querySelector(a.getAttribute('href'))
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    })
+  })
+</script>
+
+</body>
+</html>
