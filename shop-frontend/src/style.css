@@ -1,6 +1,6 @@
 /* 全局输入框美化样式 */
 /* 使用方法：在 .input-float 容器内放 input + label */
-
+@import "tailwindcss";
 /* ===== 浮动标签输入框 ===== */
 .input-float {
   @apply relative;

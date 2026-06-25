@@ -1,14 +1,13 @@
+-- 放在文件第一行
+CREATE SCHEMA IF NOT EXISTS customer_service;
+CREATE SCHEMA IF NOT EXISTS shop;
+
 CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
 COMMENT ON EXTENSION pgcrypto IS 'cryptographic functions';
 CREATE EXTENSION IF NOT EXISTS vector WITH SCHEMA public;
 COMMENT ON EXTENSION vector IS 'vector data type and ivfflat and hnsw access methods';
 SET default_tablespace = '';
 SET default_table_access_method = heap;
-
--- 确保 schema 存在（pg_dump 可能把 CREATE TABLE 放在 CREATE SCHEMA 前面）
-CREATE SCHEMA IF NOT EXISTS shop;
-CREATE SCHEMA IF NOT EXISTS customer_service;
-
 CREATE TABLE customer_service.chat_messages (
     id integer NOT NULL,
     session_id integer,
