@@ -6,9 +6,8 @@ import {
   ChevronRight, 
   ShoppingCart, 
   Smartphone, 
-  Shirt, 
-  Cookie, 
-  Gift, 
+  Plug, 
+  Briefcase, 
   Sparkles 
 } from 'lucide-vue-next'
 import { useCartStore } from '@/stores/cart'
@@ -26,9 +25,8 @@ const loading = ref(true)
 
 const categories = [
   { id: 1, name: '数码', icon: Smartphone },
-  { id: 2, name: '服装', icon: Shirt },
-  { id: 3, name: '食品', icon: Cookie },
-  { id: 4, name: '礼品', icon: Gift },
+  { id: 2, name: '电器', icon: Plug },
+  { id: 3, name: '办公', icon: Briefcase },
 ]
 
 const banners = [

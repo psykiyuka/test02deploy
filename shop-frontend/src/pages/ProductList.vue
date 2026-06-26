@@ -31,6 +31,18 @@ const categories = ref<Category[]>([])
 const expandedCategories = ref<number[]>([])
 const mobileFilterOpen = ref(false)
 
+// 当前选中分类的名称（遍历一级 / 二级分类树查找），用于"已选条件"标签展示
+const selectedCategoryName = computed(() => {
+  const id = selectedCategory.value
+  if (id == null) return ''
+  for (const cat of categories.value) {
+    if (cat.id === id) return cat.name
+    const child = cat.children?.find((c) => c.id === id)
+    if (child) return child.name
+  }
+  return ''
+})
+
 // 防抖搜索
 let searchTimer: ReturnType<typeof setTimeout> | null = null
 const debouncedSearch = ref('')
@@ -405,7 +417,7 @@ onMounted(() => {
                 v-if="selectedCategory"
                 class="inline-flex items-center gap-1 px-3 py-1 bg-indigo-50 text-indigo-700 rounded-full text-xs"
               >
-                分类已选
+                {{ selectedCategoryName }}
                 <button @click="selectedCategory = null; currentPage = 1" class="hover:text-indigo-900">
                   <X class="w-3 h-3" />
                 </button>
