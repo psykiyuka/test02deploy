@@ -5,14 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="22e810aa-4eb9-4679-a41f-0366e5a29676" name="更改" comment="1">
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/init.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/nginx/init.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/test02deploy.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/test02deploy.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/init.sql" beforeDir="false" afterPath="$PROJECT_DIR$/init.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-frontend/node_modules/.package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/shop-frontend/node_modules/.package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shop-frontend/node_modules/.vite/deps/_metadata.json" beforeDir="false" afterPath="$PROJECT_DIR$/shop-frontend/node_modules/.vite/deps/_metadata.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shop-frontend/node_modules/.vite/deps/chunk-NALCFEMM.js" beforeDir="false" afterPath="$PROJECT_DIR$/shop-frontend/node_modules/.vite/deps/chunk-NALCFEMM.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shop-frontend/node_modules/.vite/deps/chunk-NALCFEMM.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/shop-frontend/node_modules/.vite/deps/chunk-NALCFEMM.js.map" afterDir="false" />
@@ -27,7 +20,8 @@
       <change beforePath="$PROJECT_DIR$/shop-frontend/node_modules/.vite/deps/vue-router.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/shop-frontend/node_modules/.vite/deps/vue-router.js.map" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shop-frontend/node_modules/.vite/deps/vue.js" beforeDir="false" afterPath="$PROJECT_DIR$/shop-frontend/node_modules/.vite/deps/vue.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shop-frontend/node_modules/.vite/deps/vue.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/shop-frontend/node_modules/.vite/deps/vue.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop-frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/shop-frontend/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-frontend/src/pages/ProductList.vue" beforeDir="false" afterPath="$PROJECT_DIR$/shop-frontend/src/pages/ProductList.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-service/domain/product/product_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/shop-service/domain/product/product_service.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,7 +53,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "dev",
+    "git-widget-placeholder": "main",
     "last_opened_file_path": "E:/作业/26_03_07/tt2/test02deploy"
   }
 }]]></component>
@@ -128,6 +122,17 @@
     </task>
     <option name="localTasksCounter" value="6" />
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="修复首页轮播图和全部商品筛选功能" />

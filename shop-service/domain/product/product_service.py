@@ -35,7 +35,7 @@ def get_hot_products() -> list:
             cur.execute(
                 "SELECT p.id, p.name, p.price, p.image_url, p.stock, p.category_id, p.discount, p.sales, c.name as category_name "
                 "FROM shop.products p JOIN shop.categories c ON p.category_id = c.id "
-                "WHERE p.status = 'on_sale' AND p.approval_status = 'approved' ORDER BY p.created_at DESC LIMIT 5"
+                "WHERE p.status = 'on_sale' AND p.approval_status = 'approved' ORDER BY p.created_at DESC LIMIT 8"
             )
             products = [dict(row) for row in cur.fetchall()]
 

@@ -22,7 +22,7 @@ const minPrice = ref('')
 const maxPrice = ref('')
 const onlyInStock = ref(false)
 const currentPage = ref(1)
-const pageSize = 12
+const pageSize = 6
 
 // 数据状态
 const products = ref<Product[]>([])
