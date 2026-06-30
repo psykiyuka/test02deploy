@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { 
   ChevronLeft, 
@@ -22,6 +22,27 @@ const auth = useAuthStore()
 const currentSlide = ref(0)
 const products = ref<Product[]>([])
 const loading = ref(true)
+
+// 自动轮播定时器
+let autoplayTimer: ReturnType<typeof setInterval> | null = null
+
+function startAutoplay() {
+  autoplayTimer = setInterval(() => {
+    currentSlide.value = (currentSlide.value + 1) % banners.length
+  }, 3000)
+}
+
+function stopAutoplay() {
+  if (autoplayTimer) {
+    clearInterval(autoplayTimer)
+    autoplayTimer = null
+  }
+}
+
+function resetAutoplay() {
+  stopAutoplay()
+  startAutoplay()
+}
 
 const categories = [
   { id: 1, name: '数码', icon: Smartphone },
@@ -51,14 +72,16 @@ async function fetchHotProducts() {
 
 function prevSlide() {
   currentSlide.value = currentSlide.value === 0 ? banners.length - 1 : currentSlide.value - 1
+  resetAutoplay()
 }
 
 function nextSlide() {
   currentSlide.value = currentSlide.value === banners.length - 1 ? 0 : currentSlide.value + 1
+  resetAutoplay()
 }
 
 function goToCategory(categoryId: number) {
-  router.push({ name: 'products', query: { category: String(categoryId) } })
+  router.push({ name: 'products', query: { category_id: String(categoryId) } })
 }
 
 function goToProduct(productId: number) {
@@ -80,6 +103,11 @@ async function addToCart(productId: number, event?: Event) {
 
 onMounted(() => {
   fetchHotProducts()
+  startAutoplay()
+})
+
+onUnmounted(() => {
+  stopAutoplay()
 })
 </script>
 
@@ -126,7 +154,7 @@ onMounted(() => {
           <button 
             v-for="(_, index) in banners" 
             :key="index"
-            @click="currentSlide = index"
+            @click="currentSlide = index; resetAutoplay()"
             :class="[
               'w-2 h-2 rounded-full transition-all duration-300',
               index === currentSlide ? 'bg-white w-6' : 'bg-white/50'

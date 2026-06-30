@@ -268,21 +268,35 @@ onMounted(() => {
                 v-for="category in categories"
                 :key="category.id"
               >
-                <button
-                  @click="toggleCategory(category.id)"
-                  class="w-full flex items-center gap-2 py-2 text-left hover:bg-gray-50 rounded-lg px-2 transition-colors"
-                >
-                  <ChevronDown
+                <div class="flex items-center gap-0">
+                  <!-- 展开/折叠箭头 -->
+                  <button
+                    @click="toggleCategory(category.id)"
+                    class="flex items-center justify-center w-7 h-8 rounded-lg hover:bg-gray-50 transition-colors flex-shrink-0"
+                  >
+                    <ChevronDown
+                      :class="[
+                        'w-4 h-4 text-gray-400 transition-transform duration-200',
+                        expandedCategories.includes(category.id) ? 'rotate-90' : '',
+                      ]"
+                    />
+                  </button>
+                  <!-- 父分类名称：点击筛选 -->
+                  <button
+                    @click="selectedCategory = selectedCategory === category.id ? null : category.id; currentPage = 1"
                     :class="[
-                      'w-4 h-4 text-gray-400 transition-transform duration-200',
-                      expandedCategories.includes(category.id) ? 'rotate-90' : '',
+                      'flex-1 text-left py-2 px-2 rounded-lg text-sm transition-colors',
+                      selectedCategory === category.id
+                        ? 'bg-indigo-50 text-indigo-600 font-medium'
+                        : 'text-gray-700 hover:bg-gray-50',
                     ]"
-                  />
-                  <span class="text-sm text-gray-700">{{ category.name }}</span>
-                </button>
+                  >
+                    {{ category.name }}
+                  </button>
+                </div>
                 <ul
                   v-if="expandedCategories.includes(category.id) && category.children?.length"
-                  class="ml-6 mt-1 space-y-1"
+                  class="ml-7 mt-1 space-y-1"
                 >
                   <li v-for="child in category.children" :key="child.id">
                     <button
