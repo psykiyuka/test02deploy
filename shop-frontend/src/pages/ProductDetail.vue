@@ -1,17 +1,19 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { Heart, Minus, Plus, ShoppingCart, ArrowRight, Truck, Shield, RefreshCw, Eye } from 'lucide-vue-next'
+import { Heart, Minus, Plus, ShoppingCart, ArrowRight, Truck, Shield, RefreshCw, Eye, MapPin } from 'lucide-vue-next'
 import { api } from '@/utils/api'
 import { useCartStore } from '@/stores/cart'
 import { useAuthStore } from '@/stores/auth'
 import { favoriteApi } from '@/utils/favoriteApi'
+import { useToast } from '@/composables/useToast'
 import type { Product } from '@/types'
 
 const route = useRoute()
 const router = useRouter()
 const cartStore = useCartStore()
 const authStore = useAuthStore()
+const toast = useToast()
 
 const isAdmin = computed(() => authStore.user?.role === 'admin' || localStorage.getItem('role') === 'admin')
 
@@ -23,6 +25,26 @@ const isFavorite = ref(false)
 const favoriteLoading = ref(false)
 const addCartLoading = ref(false)
 const buyNowLoading = ref(false)
+
+// 地址选择（立即购买时弹出）
+interface Address {
+  id: number
+  name: string
+  phone: string
+  province: string
+  city: string
+  district: string
+  detail: string
+  is_default: boolean
+}
+const showAddressPicker = ref(false)
+const addresses = ref<Address[]>([])
+const selectedAddressId = ref<number | null>(null)
+const addressLoading = ref(false)
+
+function formatAddress(addr: Address) {
+  return `${addr.province}${addr.city}${addr.district} ${addr.detail}`
+}
 
 async function fetchProduct() {
   loading.value = true
@@ -103,7 +125,7 @@ async function addToCart() {
   addCartLoading.value = true
   try {
     await cartStore.addItem(product.value.id, quantity.value)
-    alert('已加入购物车')
+    toast.show('success', '已加入购物车')
   } catch (err) {
     console.error('加入购物车失败:', err)
   } finally {
@@ -118,14 +140,56 @@ async function buyNow() {
     router.push('/login')
     return
   }
+  // 弹出地址选择框
+  showAddressPicker.value = true
+  addressLoading.value = true
+  try {
+    const res = await api.get<any>('/c-endpoint/addresses')
+    if (res.code === 0) {
+      const data = res.data as any
+      addresses.value = Array.isArray(data) ? data : (data.items || data)
+      const defaultAddr = addresses.value.find(a => a.is_default)
+      if (defaultAddr) {
+        selectedAddressId.value = defaultAddr.id
+      } else if (addresses.value.length > 0) {
+        selectedAddressId.value = addresses.value[0].id
+      }
+    }
+  } catch (err) {
+    console.error('获取地址失败:', err)
+    toast.show('error', '获取地址失败')
+  } finally {
+    addressLoading.value = false
+  }
+}
+
+async function confirmBuyNow() {
+  if (!product.value) return
+  if (!selectedAddressId.value) {
+    toast.show('warning', '请选择收货地址')
+    return
+  }
+  const selectedAddr = addresses.value.find(a => a.id === selectedAddressId.value)
+  if (!selectedAddr) return
+
   buyNowLoading.value = true
   try {
-    // 先加入购物车
-    await cartStore.addItem(product.value.id, quantity.value)
-    // 跳转购物车
-    router.push('/cart')
-  } catch (err) {
-    console.error('购买操作失败:', err)
+    const addressStr = `${selectedAddr.name} ${selectedAddr.phone} ${formatAddress(selectedAddr)}`
+    const res = await api.post('/c-endpoint/orders/direct-buy', {
+      product_id: product.value.id,
+      quantity: quantity.value,
+      address: addressStr,
+    })
+    if (res.code === 0) {
+      showAddressPicker.value = false
+      // 直接跳转支付页面
+      const orderId = (res.data as any).id
+      router.push(`/payment/${orderId}`)
+    } else {
+      toast.show('error', res.message || '下单失败')
+    }
+  } catch (err: any) {
+    toast.show('error', err.message || '下单失败')
   } finally {
     buyNowLoading.value = false
   }
@@ -330,5 +394,73 @@ onMounted(() => {
         </div>
       </div>
     </div>
+
+    <!-- 地址选择弹窗（立即购买） -->
+    <Teleport to="body">
+      <Transition name="modal">
+        <div v-if="showAddressPicker" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" @click.self="showAddressPicker = false">
+          <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg mx-4 overflow-hidden">
+            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+              <h3 class="text-lg font-semibold text-gray-900">选择收货地址</h3>
+              <button @click="showAddressPicker = false" class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+                &times;
+              </button>
+            </div>
+
+            <div class="p-6 max-h-96 overflow-y-auto">
+              <div v-if="addressLoading" class="py-8 text-center text-gray-400">加载中...</div>
+
+              <div v-else-if="addresses.length === 0" class="py-8 text-center">
+                <p class="text-gray-500 mb-4">暂无收货地址</p>
+                <button @click="showAddressPicker = false; router.push('/profile')" class="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm hover:bg-indigo-700">
+                  去添加地址
+                </button>
+              </div>
+
+              <div v-else class="space-y-3">
+                <div
+                  v-for="addr in addresses"
+                  :key="addr.id"
+                  @click="selectedAddressId = addr.id"
+                  :class="[
+                    'p-4 rounded-xl border-2 cursor-pointer transition-all',
+                    selectedAddressId === addr.id
+                      ? 'border-indigo-600 bg-indigo-50'
+                      : 'border-gray-200 hover:border-gray-300'
+                  ]"
+                >
+                  <div class="flex items-center gap-2">
+                    <MapPin class="w-4 h-4 text-indigo-600" />
+                    <span class="font-medium text-gray-900">{{ addr.name }}</span>
+                    <span class="text-sm text-gray-500">{{ addr.phone }}</span>
+                    <span v-if="addr.is_default" class="px-2 py-0.5 bg-indigo-100 text-indigo-700 text-xs rounded-full">默认</span>
+                  </div>
+                  <p class="text-sm text-gray-600 mt-1 ml-6">{{ formatAddress(addr) }}</p>
+                </div>
+              </div>
+            </div>
+
+            <div v-if="addresses.length > 0" class="px-6 py-4 border-t border-gray-100">
+              <button
+                @click="confirmBuyNow"
+                :disabled="!selectedAddressId || buyNowLoading"
+                class="w-full py-3 bg-indigo-600 text-white rounded-xl font-medium hover:bg-indigo-700 transition-colors disabled:opacity-50"
+              >
+                {{ buyNowLoading ? '下单中...' : '确认购买' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </Transition>
+    </Teleport>
   </div>
 </template>
+
+<style scoped>
+.modal-enter-active { transition: all 0.25s ease-out; }
+.modal-leave-active { transition: all 0.15s ease-in; }
+.modal-enter-from { opacity: 0; }
+.modal-enter-from > div { transform: scale(0.95); opacity: 0; }
+.modal-leave-to { opacity: 0; }
+.modal-leave-to > div { transform: scale(0.95); opacity: 0; }
+</style>

@@ -10,4 +10,5 @@ from .order_service import (
     cancel_timeout_orders,
     get_orders_by_merchant,
     update_logistics_status,
+    direct_buy,
 )

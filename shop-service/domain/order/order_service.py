@@ -13,7 +13,7 @@ from domain.logistics import generate_logistics
 logger = logging.getLogger("shop")
 
 
-def create_order(user_id: int, address: str) -> dict:
+def create_order(user_id: int, address: str, product_ids: list[int] = None) -> dict:
     if not address or not address.strip():
         raise BusinessError("收货地址不能为空")
     if len(address.strip()) < 5:
@@ -23,12 +23,21 @@ def create_order(user_id: int, address: str) -> dict:
     conn.autocommit = False
     try:
         with conn.cursor(cursor_factory=RealDictCursor) as cur:
-            cur.execute(
-                "SELECT ci.product_id, ci.quantity, p.name, p.price, p.stock, p.merchant_id "
-                "FROM shop.cart_items ci JOIN shop.products p ON ci.product_id = p.id "
-                "WHERE ci.user_id = %s FOR UPDATE OF p",
-                (user_id,),
-            )
+            # 仅查询选中的购物车商品（如果传了 product_ids），否则查询全部
+            if product_ids:
+                cur.execute(
+                    "SELECT ci.product_id, ci.quantity, p.name, p.price, p.stock, p.merchant_id "
+                    "FROM shop.cart_items ci JOIN shop.products p ON ci.product_id = p.id "
+                    "WHERE ci.user_id = %s AND ci.product_id IN %s FOR UPDATE OF p",
+                    (user_id, tuple(product_ids)),
+                )
+            else:
+                cur.execute(
+                    "SELECT ci.product_id, ci.quantity, p.name, p.price, p.stock, p.merchant_id "
+                    "FROM shop.cart_items ci JOIN shop.products p ON ci.product_id = p.id "
+                    "WHERE ci.user_id = %s FOR UPDATE OF p",
+                    (user_id,),
+                )
             cart_items = [dict(row) for row in cur.fetchall()]
             if not cart_items:
                 raise BusinessError("购物车为空，无法下单")
@@ -77,7 +86,11 @@ def create_order(user_id: int, address: str) -> dict:
                 logger.info("订单创建成功 | order_id=%s | user_id=%s | merchant_id=%s | amount=%.2f",
                             order_id, user_id, merchant_id, total_amount)
 
-            cur.execute("DELETE FROM shop.cart_items WHERE user_id = %s", (user_id,))
+            # 仅删除已下单的购物车商品（选中的），保留未选中的
+            if product_ids:
+                cur.execute("DELETE FROM shop.cart_items WHERE user_id = %s AND product_id IN %s", (user_id, tuple(product_ids)))
+            else:
+                cur.execute("DELETE FROM shop.cart_items WHERE user_id = %s", (user_id,))
 
         conn.commit()
 
@@ -573,6 +586,76 @@ def confirm_delivery(user_id: int, order_id: int) -> dict:
         logger.info("用户确认收货 | order_id=%s | user_id=%s", order_id, user_id)
 
         format_date_fields(order, ("created_at", "paid_at", "cancelled_at"))
+        return order
+
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        conn.autocommit = True
+        release_connection(conn)
+
+
+def direct_buy(user_id: int, product_id: int, quantity: int, address: str) -> dict:
+    """立即购买：直接下单指定商品，不走购物车"""
+    if not address or not address.strip():
+        raise BusinessError("收货地址不能为空")
+    if len(address.strip()) < 5:
+        raise BusinessError("收货地址过短，请填写完整地址")
+    if quantity < 1:
+        raise BusinessError("购买数量不能小于1")
+
+    conn = get_connection()
+    conn.autocommit = False
+    try:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            # 查询商品信息并锁定库存
+            cur.execute(
+                "SELECT id, name, price, stock, merchant_id FROM shop.products WHERE id = %s FOR UPDATE",
+                (product_id,),
+            )
+            product = cur.fetchone()
+            if not product:
+                raise NotFoundError("商品不存在")
+            product = dict(product)
+
+            if product["stock"] < quantity:
+                raise BusinessError(f"商品 [{product['name']}] 库存不足，仅剩 {product['stock']} 件")
+
+            # 扣减库存
+            cur.execute(
+                "UPDATE shop.products SET stock = stock - %s WHERE id = %s AND stock >= %s",
+                (quantity, product_id, quantity),
+            )
+
+            # 创建订单
+            total_amount = product["price"] * quantity
+            merchant_id = product.get("merchant_id") or 0
+
+            cur.execute(
+                "INSERT INTO shop.orders (user_id, total_amount, address, merchant_id) VALUES (%s, %s, %s, %s) RETURNING id",
+                (user_id, total_amount, address, merchant_id if merchant_id else None),
+            )
+            order_id = cur.fetchone()["id"]
+
+            # 创建订单项
+            cur.execute(
+                "INSERT INTO shop.order_items (order_id, product_id, product_name, price, quantity) "
+                "VALUES (%s, %s, %s, %s, %s)",
+                (order_id, product_id, product["name"], product["price"], quantity),
+            )
+
+            cur.execute("SELECT * FROM shop.orders WHERE id = %s", (order_id,))
+            order = dict(cur.fetchone())
+            format_date_fields(order, ("created_at", "paid_at", "cancelled_at"))
+
+            # 清除商品缓存
+            delete_keys(f"product:{product_id}", "hot:products:list")
+
+        conn.commit()
+        logger.info("立即购买下单成功 | order_id=%s | user_id=%s | product_id=%s | quantity=%s",
+                     order_id, user_id, product_id, quantity)
+
         return order
 
     except Exception:

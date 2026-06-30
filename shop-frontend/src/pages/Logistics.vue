@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { Copy, Check, Package, Truck, MapPin, Calendar } from 'lucide-vue-next'
 import { api } from '@/utils/api'
+import { formatTime } from '@/utils/formatTime'
 
 const route = useRoute()
 
@@ -118,7 +119,7 @@ onMounted(loadLogistics)
           <div class="mt-4 flex items-center gap-6">
             <div class="flex items-center gap-2 text-sm text-gray-500">
               <Calendar class="w-4 h-4" />
-              <span>预计送达：{{ logistics.estimated_delivery }}</span>
+              <span>预计送达：{{ formatTime(logistics.estimated_delivery) || '暂无' }}</span>
             </div>
           </div>
         </div>
@@ -166,7 +167,7 @@ onMounted(loadLogistics)
                   >
                     {{ STATUS_LABEL[record.status] || record.status }}
                   </span>
-                  <span class="text-sm text-gray-400">{{ record.time }}</span>
+                  <span class="text-sm text-gray-400">{{ formatTime(record.time) }}</span>
                 </div>
                 <p 
                   :class="[

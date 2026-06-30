@@ -1,15 +1,22 @@
 from fastapi import APIRouter, Depends
 
 from apps.common.auth import get_current_user
-from domain.order import create_order, pay_order, cancel_order, confirm_delivery, get_orders, get_order_detail, delete_order
-from .schema import CreateOrderRequest
+from domain.order import create_order, pay_order, cancel_order, confirm_delivery, get_orders, get_order_detail, delete_order, direct_buy
+from .schema import CreateOrderRequest, DirectBuyRequest
 
 router = APIRouter(prefix="/c-endpoint/orders", tags=["C端-订单"])
 
 
 @router.post("")
 def c_create_order(req: CreateOrderRequest, user: dict = Depends(get_current_user)):
-    order = create_order(user["user_id"], req.address)
+    order = create_order(user["user_id"], req.address, req.product_ids)
+    return {"code": 0, "data": order, "message": "success"}
+
+
+@router.post("/direct-buy")
+def c_direct_buy(req: DirectBuyRequest, user: dict = Depends(get_current_user)):
+    """立即购买：直接下单指定商品，不走购物车"""
+    order = direct_buy(user["user_id"], req.product_id, req.quantity, req.address)
     return {"code": 0, "data": order, "message": "success"}
 
 

@@ -4,6 +4,7 @@ import { useRouter, useRoute } from 'vue-router'
 import { Package, Truck, CheckCircle, XCircle, Clock, ArrowRight, Trash2, Info } from 'lucide-vue-next'
 import { api } from '@/utils/api'
 import { useToast } from '@/composables/useToast'
+import { formatTime } from '@/utils/formatTime'
 import type { Order } from '@/types'
 
 const router = useRouter()
@@ -252,7 +253,7 @@ watch(() => route.path, (newPath) => {
                 <span class="text-sm text-gray-500">订单号：</span>
                 <span class="text-sm font-medium text-gray-900">#{{ order.id }}</span>
               </div>
-              <span class="text-sm text-gray-400">{{ order.created_at }}</span>
+              <span class="text-sm text-gray-400">{{ formatTime(order.created_at) }}</span>
             </div>
 
             <div 
@@ -303,9 +304,7 @@ watch(() => route.path, (newPath) => {
                         运单号：{{ logisticsMap[order.id].tracking_number }}
                       </span>
                     </p>
-                    <p class="text-xs text-gray-500 mt-0.5">
-                      预计送达：{{ logisticsMap[order.id].estimated_delivery || '暂无' }}
-                    </p>
+                      <p class="text-xs text-gray-500">{{ formatTime(logisticsMap[order.id].estimated_delivery) || '暂无' }}</p>
                   </div>
                 </div>
                 <div v-if="logisticsMap[order.id].timeline && logisticsMap[order.id].timeline.length > 0" class="space-y-2 ml-1">
@@ -320,7 +319,7 @@ watch(() => route.path, (newPath) => {
                     </div>
                     <div>
                       <p :class="idx === 0 ? 'text-gray-800 font-medium' : 'text-gray-500'">{{ step.location || step.status }}</p>
-                      <p class="text-xs text-gray-400">{{ step.time }}</p>
+                      <p class="text-xs text-gray-400">{{ formatTime(step.time) }}</p>
                     </div>
                   </div>
                 </div>

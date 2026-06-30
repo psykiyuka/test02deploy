@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { RefreshCw, Upload, Plus, Clock, CheckCircle, XCircle, Truck } from 'lucide-vue-next'
 import { api } from '@/utils/api'
+import { formatTime } from '@/utils/formatTime'
 import type { AfterSaleRequest } from '@/types'
 
 const route = useRoute()
@@ -319,7 +320,7 @@ onMounted(() => {
                     {{ getStatusConfig(record.status).label }}
                   </span>
                 </div>
-                <span class="text-xs text-gray-400">{{ record.created_at }}</span>
+                <span class="text-xs text-gray-400">{{ formatTime(record.created_at) }}</span>
               </div>
 
               <div class="flex items-center gap-3">

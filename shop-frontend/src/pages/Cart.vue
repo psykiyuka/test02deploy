@@ -172,7 +172,11 @@ async function confirmCheckout() {
   checkoutLoading.value = true
   try {
     const addressStr = `${selectedAddr.name} ${selectedAddr.phone} ${formatAddress(selectedAddr)}`
-    const res = await api.post('/c-endpoint/orders', { address: addressStr })
+    // 仅传递选中的商品ID给后端，避免全部商品一起结算
+    const res = await api.post('/c-endpoint/orders', {
+      address: addressStr,
+      product_ids: selectedItems.value.length > 0 ? selectedItems.value : undefined,
+    })
     if (res.code === 0) {
       showAddressPicker.value = false
       selectedItems.value = []

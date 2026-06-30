@@ -69,9 +69,9 @@ function addToCart(product: FavoriteItem) {
         <Heart class="w-10 h-10 text-rose-300" />
       </div>
       <p class="text-charcoal/40 text-lg mb-4">收藏夹还是空的</p>
-      <button
+        <button
         @click="router.push('/products')"
-        class="px-6 py-3 bg-gradient-to-r from-gold-400 to-gold-500 text-white rounded-xl font-semibold hover:from-gold-500 hover:to-gold-600 transition-all shadow-lg shadow-gold-300/30 cursor-pointer"
+        class="px-6 py-3 bg-indigo-600 text-white rounded-xl font-semibold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-200 cursor-pointer"
       >
         去逛逛
       </button>
