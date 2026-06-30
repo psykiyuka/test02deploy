@@ -4,14 +4,46 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="22e810aa-4eb9-4679-a41f-0366e5a29676" name="更改" comment="1" />
+    <list default="true" id="22e810aa-4eb9-4679-a41f-0366e5a29676" name="更改" comment="1">
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/init.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/nginx/init.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/test02deploy.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/test02deploy.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/init.sql" beforeDir="false" afterPath="$PROJECT_DIR$/init.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-frontend/node_modules/.package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/shop-frontend/node_modules/.package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-frontend/node_modules/.vite/deps/_metadata.json" beforeDir="false" afterPath="$PROJECT_DIR$/shop-frontend/node_modules/.vite/deps/_metadata.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-frontend/node_modules/.vite/deps/chunk-NALCFEMM.js" beforeDir="false" afterPath="$PROJECT_DIR$/shop-frontend/node_modules/.vite/deps/chunk-NALCFEMM.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-frontend/node_modules/.vite/deps/chunk-NALCFEMM.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/shop-frontend/node_modules/.vite/deps/chunk-NALCFEMM.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-frontend/node_modules/.vite/deps/chunk-VID4RN2V.js" beforeDir="false" afterPath="$PROJECT_DIR$/shop-frontend/node_modules/.vite/deps/chunk-VID4RN2V.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-frontend/node_modules/.vite/deps/chunk-VID4RN2V.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/shop-frontend/node_modules/.vite/deps/chunk-VID4RN2V.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-frontend/node_modules/.vite/deps/lucide-vue-next.js" beforeDir="false" afterPath="$PROJECT_DIR$/shop-frontend/node_modules/.vite/deps/lucide-vue-next.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-frontend/node_modules/.vite/deps/lucide-vue-next.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/shop-frontend/node_modules/.vite/deps/lucide-vue-next.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-frontend/node_modules/.vite/deps/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/shop-frontend/node_modules/.vite/deps/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-frontend/node_modules/.vite/deps/pinia.js" beforeDir="false" afterPath="$PROJECT_DIR$/shop-frontend/node_modules/.vite/deps/pinia.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-frontend/node_modules/.vite/deps/pinia.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/shop-frontend/node_modules/.vite/deps/pinia.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-frontend/node_modules/.vite/deps/vue-router.js" beforeDir="false" afterPath="$PROJECT_DIR$/shop-frontend/node_modules/.vite/deps/vue-router.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-frontend/node_modules/.vite/deps/vue-router.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/shop-frontend/node_modules/.vite/deps/vue-router.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-frontend/node_modules/.vite/deps/vue.js" beforeDir="false" afterPath="$PROJECT_DIR$/shop-frontend/node_modules/.vite/deps/vue.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-frontend/node_modules/.vite/deps/vue.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/shop-frontend/node_modules/.vite/deps/vue.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop-frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/shop-frontend/package-lock.json" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
@@ -22,13 +54,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "dev",
+    "last_opened_file_path": "E:/作业/26_03_07/tt2/test02deploy"
   }
-}</component>
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\作业\26_03_07\tt2\test02deploy\docs" />
+      <recent name="E:\作业\26_03_07\tt2\test02deploy\nginx" />
+      <recent name="E:\作业\26_03_07\tt2\test02deploy" />
+    </key>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
