@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, onMounted, watch } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { Package, Truck, CheckCircle, XCircle, Clock, ArrowRight, Trash2, Info } from 'lucide-vue-next'
 import { api } from '@/utils/api'
 import { useToast } from '@/composables/useToast'
 import type { Order } from '@/types'
 
 const router = useRouter()
+const route = useRoute()
 const toast = useToast()
 const activeTab = ref('all')
 const orders = ref<Order[]>([])
@@ -190,6 +191,13 @@ function toggleLogistics(orderId: number) {
 
 onMounted(() => {
   fetchOrders()
+})
+
+// 每次路由变化时刷新订单列表（如从支付页返回时）
+watch(() => route.path, (newPath) => {
+  if (newPath === '/orders') {
+    fetchOrders()
+  }
 })
 </script>
 
