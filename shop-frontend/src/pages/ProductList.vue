@@ -5,12 +5,14 @@ import { Search, ChevronDown, ShoppingCart, SlidersHorizontal, X } from 'lucide-
 import { useCartStore } from '@/stores/cart'
 import { useAuthStore } from '@/stores/auth'
 import { api } from '@/utils/api'
+import { useToast } from '@/composables/useToast'
 import type { Product, Category } from '@/types'
 
 const router = useRouter()
 const route = useRoute()
 const cart = useCartStore()
 const auth = useAuthStore()
+const toast = useToast()
 
 // 筛选状态
 const searchQuery = ref('')
@@ -190,8 +192,9 @@ async function addToCart(productId: number, event?: Event) {
   }
   try {
     await cart.addItem(productId, 1)
+    toast.show('success', '已加入购物车')
   } catch {
-    // 忽略错误
+    toast.show('error', '加入购物车失败，请重试')
   }
 }
 

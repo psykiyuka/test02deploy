@@ -43,6 +43,7 @@ from apps.c_endpoint.chat_router import router as c_chat_router
 from apps.m_endpoint.chat_router import router as m_chat_router
 from apps.admin_endpoint.chat_router import router as admin_chat_router
 from apps.internal.router import router as internal_router
+from apps.c_endpoint.payment.router import router as payment_router
 
 
 @asynccontextmanager
@@ -116,6 +117,7 @@ app.include_router(c_chat_router, prefix=_prefix)
 app.include_router(m_chat_router, prefix=_prefix)
 app.include_router(admin_chat_router, prefix=_prefix)
 app.include_router(internal_router,     prefix=_prefix)
+app.include_router(payment_router,     prefix=_prefix)
 
 
 @app.get("/health")

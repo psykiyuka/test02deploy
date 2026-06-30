@@ -23,6 +23,7 @@ const router = createRouter({
         { path: 'profile', name: 'profile', component: () => import('@/pages/Profile.vue') },
         { path: 'merchant-register', name: 'merchant-register', component: () => import('@/pages/MerchantRegister.vue') },
         { path: 'favorites', name: 'favorites', component: () => import('@/pages/Favorites.vue') },
+        { path: 'payment/:id', name: 'payment', component: () => import('@/pages/Payment.vue') },
       ],
     },
     {
@@ -87,7 +88,7 @@ router.beforeEach((to, _from, next) => {
     }
   }
 
-  const protectedRoutes = ['/cart', '/orders', '/profile', '/after-sales', '/favorites']
+  const protectedRoutes = ['/cart', '/orders', '/profile', '/after-sales', '/favorites', '/payment']
   if (protectedRoutes.some(r => to.path.startsWith(r))) {
     if (!token) {
       return next('/login')

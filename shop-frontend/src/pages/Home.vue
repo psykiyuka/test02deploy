@@ -13,11 +13,13 @@ import {
 import { useCartStore } from '@/stores/cart'
 import { useAuthStore } from '@/stores/auth'
 import { api } from '@/utils/api'
+import { useToast } from '@/composables/useToast'
 import type { Product } from '@/types'
 
 const router = useRouter()
 const cart = useCartStore()
 const auth = useAuthStore()
+const toast = useToast()
 
 const currentSlide = ref(0)
 const products = ref<Product[]>([])
@@ -96,8 +98,9 @@ async function addToCart(productId: number, event?: Event) {
   }
   try {
     await cart.addItem(productId, 1)
+    toast.show('success', '已加入购物车')
   } catch {
-    // 静态数据模式下忽略错误
+    toast.show('error', '加入购物车失败，请重试')
   }
 }
 

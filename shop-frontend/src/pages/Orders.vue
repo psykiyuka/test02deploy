@@ -3,9 +3,11 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { Package, Truck, CheckCircle, XCircle, Clock, ArrowRight, Trash2, Info } from 'lucide-vue-next'
 import { api } from '@/utils/api'
+import { useToast } from '@/composables/useToast'
 import type { Order } from '@/types'
 
 const router = useRouter()
+const toast = useToast()
 const activeTab = ref('all')
 const orders = ref<Order[]>([])
 const loading = ref(true)
@@ -64,27 +66,23 @@ async function cancelOrder(orderId: number) {
   try {
     const res = await api.put(`/c-endpoint/orders/${orderId}/cancel`)
     if (res.code === 0) {
+      toast.show('success', '订单已取消')
       await fetchOrders()
     } else {
-      alert(res.message || '取消订单失败')
+      toast.show('error', res.message || '取消订单失败')
     }
   } catch (err: any) {
-    alert(err.message || '取消订单失败')
+    toast.show('error', err.message || '取消订单失败')
   }
 }
 
+function goToPayment(orderId: number) {
+  router.push(`/payment/${orderId}`)
+}
+
 async function payOrder(orderId: number) {
-  try {
-    const res = await api.post(`/c-endpoint/orders/${orderId}/pay`)
-    if (res.code === 0) {
-      await fetchOrders()
-      alert('支付成功！')
-    } else {
-      alert(res.message || '支付失败')
-    }
-  } catch (err: any) {
-    alert(err.message || '支付失败')
-  }
+  // 改为跳转支付页面
+  goToPayment(orderId)
 }
 
 function viewLogistics(orderId: number) {
@@ -141,12 +139,13 @@ async function confirmReceive(orderId: number) {
   try {
     const res = await api.put(`/c-endpoint/orders/${orderId}/confirm`)
     if (res.code === 0) {
+      toast.show('success', '确认收货成功')
       await fetchOrders()
     } else {
-      alert(res.message || '确认收货失败')
+      toast.show('error', res.message || '确认收货失败')
     }
   } catch (err: any) {
-    alert(err.message || '确认收货失败')
+    toast.show('error', err.message || '确认收货失败')
   }
 }
 
@@ -167,12 +166,13 @@ async function deleteOrder(orderId: number) {
   try {
     const res = await api.delete(`/c-endpoint/orders/${orderId}`)
     if (res.code === 0) {
+      toast.show('success', '订单已删除')
       await fetchOrders()
     } else {
-      alert(res.message || '删除订单失败')
+      toast.show('error', res.message || '删除订单失败')
     }
   } catch (err: any) {
-    alert(err.message || '删除订单失败')
+    toast.show('error', err.message || '删除订单失败')
   }
 }
 
@@ -350,9 +350,10 @@ onMounted(() => {
                   </button>
                   <button 
                     @click="payOrder(order.id)"
-                    class="px-6 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors"
+                    class="px-6 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors flex items-center gap-2"
                   >
                     立即支付
+                    <ArrowRight class="w-4 h-4" />
                   </button>
                 </template>
                 <template v-else-if="order.status === 'paid'">

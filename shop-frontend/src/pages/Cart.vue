@@ -5,11 +5,13 @@ import { Minus, Plus, Trash2, ShoppingCart, ArrowRight, MapPin, Eye, Store } fro
 import { useCartStore } from '@/stores/cart'
 import { useAuthStore } from '@/stores/auth'
 import { api } from '@/utils/api'
+import { useToast } from '@/composables/useToast'
 import type { CartItem } from '@/types'
 
 const router = useRouter()
 const cartStore = useCartStore()
 const authStore = useAuthStore()
+const toast = useToast()
 const selectedItems = ref<number[]>([])
 const checkoutLoading = ref(false)
 const isAdmin = computed(() => authStore.user?.role === 'admin' || localStorage.getItem('role') === 'admin')
@@ -161,7 +163,7 @@ async function openAddressPicker() {
 
 async function confirmCheckout() {
   if (!selectedAddressId.value) {
-    alert('请选择收货地址')
+    toast.show('warning', '请选择收货地址')
     return
   }
   const selectedAddr = addresses.value.find(a => a.id === selectedAddressId.value)
@@ -174,18 +176,20 @@ async function confirmCheckout() {
     if (res.code === 0) {
       showAddressPicker.value = false
       selectedItems.value = []
-      const orderCount = res.data?.count || 1
-      if (orderCount > 1) {
-        alert(`下单成功！已拆分为 ${orderCount} 个独立订单（不同商家分别结算）`)
+      const orders = res.data?.orders || []
+      if (orders.length === 1) {
+        // 单订单：直接跳转支付页面
+        router.push(`/payment/${orders[0].id}`)
       } else {
-        alert('下单成功！')
+        // 多订单：跳转订单列表，逐一支付
+        router.push('/orders')
+        toast.show('info', `下单成功！已拆分为 ${orders.length} 个订单，请逐一支付`)
       }
-      router.push('/orders')
     } else {
-      alert(res.message || '下单失败')
+      toast.show('error', res.message || '下单失败')
     }
   } catch (err: any) {
-    alert(err.message || '下单失败')
+    toast.show('error', err.message || '下单失败')
   } finally {
     checkoutLoading.value = false
   }

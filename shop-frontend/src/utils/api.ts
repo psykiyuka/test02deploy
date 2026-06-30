@@ -48,9 +48,13 @@ async function request<T>(method: string, path: string, body?: any): Promise<Api
     throw new ApiError(`请求失败 (${res.status})`, res.status, -1)
   }
 
-  // 处理 422 验证错误
+  // 处理 422 错误：区分业务错误（BusinessError）和 FastAPI 参数验证错误
   if (res.status === 422) {
-    // 提取验证错误信息
+    // 后端 BusinessError：code=42201，message 包含具体业务错误信息
+    if (data.code && data.code !== 0) {
+      throw new ApiError(data.message || '操作失败', 422, data.code)
+    }
+    // FastAPI 原生参数验证错误：detail 为数组格式
     if (data.detail && Array.isArray(data.detail)) {
       const firstError = data.detail[0]
       const field = firstError.loc ? firstError.loc[firstError.loc.length - 1] : ''
